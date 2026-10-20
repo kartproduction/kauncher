@@ -78,7 +78,7 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
   <section class="mid">
     <input class="focus" id="focus" placeholder="What are you learning today?" maxlength="60" enterkeyhint="search" aria-label="Today’s focus" autocomplete="off">
     <input class="focus sm" id="creating" placeholder="What are you creating?" maxlength="40" enterkeyhint="done" aria-label="What are you creating" autocomplete="off">
-    <p class="hint">Starts by itself after you type. Creative: 30 min. Anything else: 1 hour, locked.</p>
+    <p class="hint">Starts after you type what you are creating. Creative: 30 min. Anything else: 1 hour, locked.</p>
     <button class="timer" id="timer" aria-label="Start or stop a focus session"><i></i><span id="tlabel">Focus 25:00</span></button>
   </section>
   <nav class="tools" id="tools">
@@ -132,7 +132,7 @@ function idleLabel(){return "Start focus \u00b7 "+(isArt($("creating").value)?30
 function runLabel(){return fmt(left)+(locked?" \u00b7 locked":"")}
 if(fetchS("creatingDay")===todayS())$("creating").value=fetchS("creating")||"";
 $("tlabel").textContent=idleLabel();
-var autoT=null,lastAuto=null;
+var autoT=null,lastAuto=$("creating").value;
 function startFocus(){
   var v=$("creating").value,art=isArt(v);lastAuto=v;clearTimeout(autoT);
   left=art?1800:3600;locked=!art;
@@ -143,8 +143,8 @@ function startFocus(){
 function scheduleAuto(){
   clearTimeout(autoT);
   if(iv)return;
-  var v=$("creating").value;if(v===lastAuto)return;
-  autoT=setTimeout(function(){if(!iv)startFocus()},v.trim()===""?15000:(isArt(v)?3000:6000));
+  var v=$("creating").value;if(v.trim()===""||v===lastAuto)return;
+  autoT=setTimeout(function(){if(!iv&&$("creating").value.trim())startFocus()},isArt(v)?3000:6000);
 }
 function endSession(msg){clearInterval(iv);iv=null;locked=false;$("screen").classList.remove("running");$("creating").readOnly=false;$("focus").readOnly=false;$("tlabel").textContent=idleLabel();if(msg)toast(msg)}
 $("creating").addEventListener("input",function(){store("creating",this.value);store("creatingDay",todayS());if(!iv)$("tlabel").textContent=idleLabel();scheduleAuto()});
