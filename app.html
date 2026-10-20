@@ -50,6 +50,19 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 .app:active{color:var(--accent)}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:9}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.focus,.search{-webkit-user-select:text;user-select:text}
+.bgimg{position:fixed;inset:0;background-size:cover;background-position:center;z-index:-1;display:none}
+.bgimg::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.45)}
+body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122A;--surface:#221C3D}
+.menu{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:8}
+.menu.open{display:flex}
+.sheet{background:var(--surface);border-radius:24px;padding:24px;width:min(86vw,340px)}
+.sheet h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px;margin-bottom:6px}
+.sheet .row{display:block;width:100%;text-align:left;padding:10px 0;font-size:18px}
+.sheet .row.m{color:var(--mute);font-size:15px}
+.sw{display:flex;gap:12px;margin:10px 0}
+.sw button{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line)}
+.note2{color:var(--mute);font-size:13px;margin-top:8px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -65,7 +78,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
   </section>
   <nav class="tools" id="tools">
     <button class="tool" data-app="Notes"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg>Write</button>
-    <button class="tool" data-app="Freeform"><svg viewBox="0 0 24 24"><path d="M4 16c4-10 8 4 10-4s4-2 6-4"/></svg>Sketch</button>
+    <button class="tool" data-app="Notes"><svg viewBox="0 0 24 24"><path d="M4 16c4-10 8 4 10-4s4-2 6-4"/></svg>Sketch</button>
     <button class="tool" data-app="Voice Memos"><svg viewBox="0 0 24 24"><rect x="9" y="4" width="6" height="11" rx="3"/><path d="M6 12a6 6 0 0012 0M12 18v3"/></svg>Record</button>
     <button class="tool" data-app="Camera"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="12" cy="13" r="3"/></svg>Capture</button>
     <button class="tool" data-app="Phone"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>Phone</button>
@@ -80,6 +93,16 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
   </div>
   <div class="list" id="list"></div>
 </aside>
+<div class="bgimg" id="bgimg"></div>
+<div class="menu" id="menu"><div class="sheet">
+  <h3>Background</h3>
+  <button class="row" id="pickph">Choose a photo</button>
+  <div class="sw" id="sw"></div>
+  <button class="row m" id="sharebg">Save photo for lock screen</button>
+  <button class="row m" id="resetbg">Reset to default</button>
+  <p class="note2">iPhone doesn’t let apps change your lock screen. Save the photo, then set it in Settings → Wallpaper.</p>
+</div></div>
+<input type="file" accept="image/*" id="bgfile" hidden>
 <input type="file" accept="image/*" capture="environment" id="cam" hidden>
 <div class="toast" id="toast"></div>
 
@@ -127,6 +150,40 @@ var urls={"Notes":"mobilenotes://","Freeform":"freeform://","Voice Memos":"voice
 function go(n){if(n==="Camera"){$("cam").click();return}if(urls[n]){toast("Opening "+n);location.href=urls[n]}}
 document.addEventListener("click",function(e){var b=e.target.closest("[data-app]");if(b){go(b.dataset.app);if($("drawer").classList.contains("open"))setTimeout(closeD,250)}});
 (function(){try{var c=document.createElement("canvas");c.width=c.height=180;var x=c.getContext("2d");x.fillStyle="#16122A";x.fillRect(0,0,180,180);x.strokeStyle="#9C8CFF";x.lineWidth=7;x.lineCap="round";x.beginPath();x.moveTo(50,110);x.bezierCurveTo(70,40,100,140,130,70);x.stroke();var l=document.createElement("link");l.rel="apple-touch-icon";l.href=c.toDataURL("image/png");document.head.appendChild(l)}catch(e){}})();
+var SW=[["#16122A",1],["#000000",1],["#1F3A2E",1],["#F4EFE6",0],["#DDE7F0",0]];
+var DK={"--ink":"#EDEAF8","--mute":"#9189B0","--line":"#342D55","--surface":"#221C3D"};
+var LT={"--ink":"#201A33","--mute":"#6B6483","--line":"#C9C3DB","--surface":"#F3F1F8"};
+function store(k,v){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);return true}catch(e){return false}}
+function fetchS(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function applyBg(){
+  var r=document.documentElement.style,ph=fetchS("bgphoto"),si=parseInt(fetchS("bgswatch")||"-1",10);
+  ["--bg","--ink","--mute","--line","--surface"].forEach(function(k){r.removeProperty(k)});
+  document.body.classList.toggle("photo",!!ph);
+  $("bgimg").style.display=ph?"block":"none";
+  $("bgimg").style.backgroundImage=ph?"url("+ph+")":"none";
+  if(!ph&&si>=0){var c=SW[si],t=c[1]?DK:LT;for(var k in t)r.setProperty(k,t[k]);r.setProperty("--bg",c[0])}
+}
+function openM(){$("menu").classList.add("open")}
+function closeM(){$("menu").classList.remove("open")}
+SW.forEach(function(c,i){var b=document.createElement("button");b.style.background=c[0];b.setAttribute("aria-label","Colour "+(i+1));b.onclick=function(){store("bgphoto",null);store("bgswatch",String(i));applyBg();closeM()};$("sw").appendChild(b)});
+$("resetbg").onclick=function(){store("bgphoto",null);store("bgswatch",null);applyBg();closeM()};
+$("menu").onclick=function(e){if(e.target===$("menu"))closeM()};
+$("pickph").onclick=function(){$("bgfile").click()};
+$("bgfile").onchange=function(){
+  var f=this.files[0];if(!f)return;var img=new Image(),u=URL.createObjectURL(f);
+  img.onload=function(){var s=Math.min(1,1400/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    if(store("bgphoto",c.toDataURL("image/jpeg",.8))){store("bgswatch","-1")}else{toast("Photo too large to save")}
+    URL.revokeObjectURL(u);applyBg();closeM()};
+  img.src=u;this.value=""};
+function toFile(d){var p=d.split(","),bin=atob(p[1]),a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new File([a],"kauncher-wallpaper.jpg",{type:"image/jpeg"})}
+$("sharebg").onclick=function(){
+  var d=fetchS("bgphoto");if(!d){toast("Choose a photo first");return}
+  var f=toFile(d);
+  if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f]}).catch(function(){})}else{toast("Saving isn’t supported here")}};
+var lp;
+$("screen").addEventListener("touchstart",function(e){if(e.target.closest("input,button")||$("screen").classList.contains("running"))return;lp=setTimeout(openM,600)},{passive:true});
+["touchend","touchmove","touchcancel"].forEach(function(n){document.addEventListener(n,function(){clearTimeout(lp)},{passive:true})});
+applyBg();
 </script>
 </body>
 </html>
