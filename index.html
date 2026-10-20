@@ -3,130 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kauncher</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Kauncher">
+<title>Kauncher: a minimalist launcher for creative focus</title>
+<meta name="description" content="A calm, minimalist home screen for people who make things. Android app and iPhone web app.">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,600&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--accent:#4A35FF;--surface:#F3F1F8;--line:#C9C3DB;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--accent:#4A35FF;--surface:#F3F1F8;--line:#C9C3DB;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16122A;--ink:#EDEAF8;--mute:#9189B0;--accent:#9C8CFF;--surface:#221C3D;--line:#342D55}}
 :root[data-theme="dark"]{--bg:#16122A;--ink:#EDEAF8;--mute:#9189B0;--accent:#9C8CFF;--surface:#221C3D;--line:#342D55}
 *{box-sizing:border-box;margin:0}
-html,body{height:100%}
-body{background:var(--bg);color:var(--ink);font-family:'Instrument Sans',system-ui,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.screen{height:100%;display:flex;flex-direction:column;padding:28px 26px 18px;max-width:520px;margin:0 auto}
-.time{font-family:'Bricolage Grotesque',sans-serif;font-weight:300;font-size:64px;letter-spacing:-.03em;line-height:1;transition:font-size .5s}
-.date{color:var(--mute);margin-top:8px;font-size:15px}
-.mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px}
-.focus{width:100%;background:none;border:0;border-bottom:1.5px solid var(--line);padding:6px 0 14px;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:clamp(30px,9vw,44px);letter-spacing:-.02em;line-height:1.1;color:var(--ink);transition:border-color .3s}
-.focus::placeholder{color:var(--mute);opacity:.55}
-.focus:focus{border-color:var(--accent);outline:none}
-.timer{align-self:flex-start;display:flex;align-items:center;gap:12px;padding:12px 20px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:500;font-size:16px;font-variant-numeric:tabular-nums}
-.timer i{width:9px;height:9px;border-radius:50%;background:var(--accent);display:block}
-.running .timer i{animation:p 1.6s ease-in-out infinite}
-@keyframes p{50%{transform:scale(.5);opacity:.5}}
-.tools{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;transition:opacity .6s}
-.tool{display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 0;font-size:13px;color:var(--mute)}
-.tool svg{width:44px;height:44px;stroke:var(--ink);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;padding:10px;border-radius:50%;border:1.5px solid var(--line);transition:.2s}
-.tool:active svg{background:var(--accent);stroke:var(--bg);border-color:var(--accent)}
-.handle{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 0 6px;color:var(--mute);font-size:13px;touch-action:none}
-.handle b{width:36px;height:4px;border-radius:2px;background:var(--line)}
-.running .tools,.running .handle{opacity:.12;pointer-events:none}
-.running .time{font-size:30px}
-.drawer{position:fixed;inset:0;background:var(--surface);transform:translateY(100%);transition:transform .45s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 20px) 26px calc(env(safe-area-inset-bottom,0px) + 16px);z-index:5}
-.drawer.open{transform:none}
-.dhead{display:flex;gap:14px;align-items:center;max-width:520px;width:100%;margin:0 auto 10px}
-.search{flex:1;background:none;border:0;border-bottom:1.5px solid var(--line);padding:10px 0;font:inherit;font-size:20px;color:var(--ink)}
-.search:focus{outline:none;border-color:var(--accent)}
-.close{color:var(--mute);padding:8px}
-.list{flex:1;overflow-y:auto;max-width:520px;width:100%;margin:0 auto}
-.list h2{font-weight:400;font-size:14px;color:var(--mute);margin:22px 0 4px}
-.app{display:block;width:100%;text-align:left;padding:9px 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:300;font-size:32px;letter-spacing:-.02em}
-.app:active{color:var(--accent)}
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:9}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:'Instrument Sans',system-ui,sans-serif;line-height:1.5;min-height:100%}
+main{max-width:640px;margin:0 auto;padding:56px 26px 48px}
+h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:300;font-size:clamp(56px,16vw,96px);letter-spacing:-.04em;line-height:1}
+.tag{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:clamp(22px,5vw,28px);letter-spacing:-.02em;line-height:1.2;margin:22px 0 12px}
+.sub{color:var(--mute);max-width:46ch}
+.feat{list-style:none;padding:0;margin:28px 0 8px;display:flex;flex-wrap:wrap;gap:8px}
+.feat li{border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;color:var(--mute)}
+.card{background:var(--surface);border-radius:22px;padding:24px;margin-top:20px}
+.card h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.02em}
+.card ol{margin:12px 0 20px 20px;color:var(--mute);font-size:15px}
+.card li{margin-bottom:4px}
+.btn{display:inline-block;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:500;padding:13px 22px;border-radius:999px}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.note{color:var(--mute);font-size:13px;margin-top:10px}
+.me .card{box-shadow:0 0 0 2px var(--accent)}
+footer{margin-top:40px;color:var(--mute);font-size:13px}
+a{color:inherit}
 </style>
 </head>
 <body>
-<main class="screen" id="screen">
-  <header>
-    <div class="time" id="time">9:41</div>
-    <div class="date" id="date"></div>
-  </header>
-  <section class="mid">
-    <input class="focus" id="focus" placeholder="What are you making today?" maxlength="60" aria-label="Today’s focus" autocomplete="off">
-    <button class="timer" id="timer" aria-label="Start or stop a focus session"><i></i><span id="tlabel">Focus 25:00</span></button>
+<main>
+  <h1>Kauncher</h1>
+  <p class="tag">A calm home screen for people who make things.</p>
+  <p class="sub">See the time, write down what you’re making today, start a focus session, and reach your creative tools in one tap. Everything else stays out of the way.</p>
+  <ul class="feat"><li>Daily focus line</li><li>25-minute focus mode</li><li>Write, sketch, record, capture, call</li><li>Light and dark</li></ul>
+
+  <section class="card" id="android">
+    <h2>Android</h2>
+    <ol>
+      <li>Download the APK from the latest release.</li>
+      <li>Open it and allow installs from this source when Android asks.</li>
+      <li>Press Home and choose Kauncher as your default home app.</li>
+    </ol>
+    <a class="btn" href="https://github.com/kartproduction/kauncher/releases/latest">Download for Android</a>
+    <p class="note">A full launcher: it lists your installed apps and replaces your home screen.</p>
   </section>
-  <nav class="tools" id="tools">
-    <button class="tool" data-app="Notes"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg>Write</button>
-    <button class="tool" data-app="Freeform"><svg viewBox="0 0 24 24"><path d="M4 16c4-10 8 4 10-4s4-2 6-4"/></svg>Sketch</button>
-    <button class="tool" data-app="Voice Memos"><svg viewBox="0 0 24 24"><rect x="9" y="4" width="6" height="11" rx="3"/><path d="M6 12a6 6 0 0012 0M12 18v3"/></svg>Record</button>
-    <button class="tool" data-app="Camera"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="12" cy="13" r="3"/></svg>Capture</button>
-    <button class="tool" data-app="Phone"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>Phone</button>
-  </nav>
-  <div class="handle" id="handle" role="button" tabindex="0" aria-label="Open all apps"><b></b>All apps</div>
+
+  <section class="card" id="iphone">
+    <h2>iPhone</h2>
+    <ol>
+      <li>Open the web app in Safari.</li>
+      <li>Tap the Share button, then Add to Home Screen.</li>
+      <li>Open Kauncher from its new icon.</li>
+    </ol>
+    <a class="btn" href="app.html">Open on iPhone</a>
+    <p class="note">iPhone doesn’t allow custom home screens, so this works as a focus screen with shortcuts to your apps.</p>
+  </section>
+
+  <footer>Designed by Kart Production.</footer>
 </main>
-
-<aside class="drawer" id="drawer" aria-hidden="true">
-  <div class="dhead">
-    <input class="search" id="search" placeholder="Find an app" aria-label="Find an app" autocomplete="off">
-    <button class="close" id="close">Close</button>
-  </div>
-  <div class="list" id="list"></div>
-</aside>
-<input type="file" accept="image/*" capture="environment" id="cam" hidden>
-<div class="toast" id="toast"></div>
-
 <script>
-var $=function(i){return document.getElementById(i)};
-var groups={"Make":["Notes","Freeform","Voice Memos","Camera","Music"],"Reference":["Photos","Files","Maps"],"Rest":["Phone","Messages","Mail"]};
-function tick(){var d=new Date();$("time").textContent=d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}).replace(/\s?[AP]M/i,"");$("date").textContent=d.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})}
-tick();setInterval(tick,15000);
-
-var toastT;function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show")},1600)}
-
-try{var s=localStorage.getItem("focus");if(s)$("focus").value=s}catch(e){}
-$("focus").addEventListener("input",function(){try{localStorage.setItem("focus",this.value)}catch(e){}});
-$("focus").addEventListener("keydown",function(e){if(e.key==="Enter")this.blur()});
-
-var left=1500,iv=null;
-function fmt(n){return Math.floor(n/60)+":"+String(n%60).padStart(2,"0")}
-$("timer").addEventListener("click",function(){
-  if(iv){clearInterval(iv);iv=null;left=1500;$("screen").classList.remove("running");$("tlabel").textContent="Focus 25:00";toast("Session stopped");return}
-  $("screen").classList.add("running");$("tlabel").textContent=fmt(left);
-  iv=setInterval(function(){left--;$("tlabel").textContent=fmt(left);
-    if(left<=0){clearInterval(iv);iv=null;left=1500;$("screen").classList.remove("running");$("tlabel").textContent="Focus 25:00";toast("Session finished. Take a break.")}},1000)
-});
-
-function render(q){
-  var h="";q=(q||"").toLowerCase();
-  for(var g in groups){var items=groups[g].filter(function(a){return a.toLowerCase().indexOf(q)>-1});
-    if(items.length){h+="<h2>"+g+"</h2>"+items.map(function(a){return '<button class="app" data-app="'+a+'">'+a+'</button>'}).join("")}}
-  $("list").innerHTML=h||'<h2>No app matches. Try a shorter name.</h2>'
-}
-render();
-$("search").addEventListener("input",function(){render(this.value)});
-
-function openD(){$("drawer").classList.add("open");$("drawer").setAttribute("aria-hidden","false")}
-function closeD(){$("drawer").classList.remove("open");$("drawer").setAttribute("aria-hidden","true");$("search").value="";render()}
-$("handle").addEventListener("click",openD);
-$("handle").addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" ")openD()});
-$("close").addEventListener("click",closeD);
-var y0=0;
-document.addEventListener("touchstart",function(e){y0=e.touches[0].clientY},{passive:true});
-document.addEventListener("touchend",function(e){var dy=e.changedTouches[0].clientY-y0;
-  if(!$("drawer").classList.contains("open")&&dy<-70&&y0>window.innerHeight*.5&&!iv)openD();
-  else if($("drawer").classList.contains("open")&&dy>110&&$("list").scrollTop===0)closeD()},{passive:true});
-var urls={"Notes":"mobilenotes://","Freeform":"freeform://","Voice Memos":"voicememos://","Music":"music://","Photos":"photos-redirect://","Files":"shareddocuments://","Maps":"maps://","Phone":"tel:","Messages":"sms:","Mail":"mailto:"};
-function go(n){if(n==="Camera"){$("cam").click();return}if(urls[n]){toast("Opening "+n);location.href=urls[n]}}
-document.addEventListener("click",function(e){var b=e.target.closest("[data-app]");if(b){go(b.dataset.app);if($("drawer").classList.contains("open"))setTimeout(closeD,250)}});
-(function(){try{var c=document.createElement("canvas");c.width=c.height=180;var x=c.getContext("2d");x.fillStyle="#16122A";x.fillRect(0,0,180,180);x.strokeStyle="#9C8CFF";x.lineWidth=7;x.lineCap="round";x.beginPath();x.moveTo(50,110);x.bezierCurveTo(70,40,100,140,130,70);x.stroke();var l=document.createElement("link");l.rel="apple-touch-icon";l.href=c.toDataURL("image/png");document.head.appendChild(l)}catch(e){}})();
+var ua=navigator.userAgent||"";
+var id=/Android/i.test(ua)?"android":(/iPhone|iPad|iPod/i.test(ua)?"iphone":"");
+if(id){var el=document.getElementById(id);el.style.boxShadow="0 0 0 2px var(--accent)";document.querySelector("main").insertBefore(el,document.querySelector(".card"))}
 </script>
 </body>
 </html>
