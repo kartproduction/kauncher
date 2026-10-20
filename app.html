@@ -8,6 +8,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kauncher">
+<link rel="apple-touch-icon" href="icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,600&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--accent:#4A35FF;--surface:#F3F1F8;--line:#C9C3DB;
@@ -36,7 +37,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 .tool:active svg{background:var(--accent);stroke:var(--bg);border-color:var(--accent)}
 .handle{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 0 6px;color:var(--mute);font-size:13px;touch-action:none}
 .handle b{width:36px;height:4px;border-radius:2px;background:var(--line)}
-.running .tools,.running .handle{opacity:.12;pointer-events:none}
+.running .tool:not([data-app="Phone"]),.running .handle{opacity:.12;pointer-events:none}
 .running .time{font-size:30px}
 .drawer{position:fixed;inset:0;background:var(--surface);transform:translateY(100%);transition:transform .45s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 20px) 26px calc(env(safe-area-inset-bottom,0px) + 16px);z-index:5}
 .drawer.open{transform:none}
@@ -63,6 +64,8 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
 .sw{display:flex;gap:12px;margin:10px 0}
 .sw button{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line)}
 .note2{color:var(--mute);font-size:13px;margin-top:8px}
+.focus.sm{font-size:clamp(20px,6vw,24px);padding-bottom:10px}
+.hint{color:var(--mute);font-size:13px;margin-top:-12px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -73,7 +76,9 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
     <div class="date" id="date"></div>
   </header>
   <section class="mid">
-    <input class="focus" id="focus" placeholder="What are you making today?" maxlength="60" aria-label="Today’s focus" autocomplete="off">
+    <input class="focus" id="focus" placeholder="What are you learning today?" maxlength="60" enterkeyhint="search" aria-label="Today’s focus" autocomplete="off">
+    <input class="focus sm" id="creating" placeholder="What are you creating?" maxlength="40" enterkeyhint="done" aria-label="What are you creating" autocomplete="off">
+    <p class="hint">Creative work: 30 min focus. Anything else: 1 hour, locked.</p>
     <button class="timer" id="timer" aria-label="Start or stop a focus session"><i></i><span id="tlabel">Focus 25:00</span></button>
   </section>
   <nav class="tools" id="tools">
@@ -116,15 +121,25 @@ var toastT;function toast(m){var t=$("toast");t.textContent=m;t.classList.add("s
 
 try{var s=localStorage.getItem("focus");if(s)$("focus").value=s}catch(e){}
 $("focus").addEventListener("input",function(){try{localStorage.setItem("focus",this.value)}catch(e){}});
-$("focus").addEventListener("keydown",function(e){if(e.key==="Enter")this.blur()});
+$("focus").addEventListener("keydown",function(e){if(e.key!=="Enter")return;var q=this.value.trim();this.blur();if(!q||iv)return;var e2=encodeURIComponent(q);location.href="youtube://www.youtube.com/results?search_query="+e2;setTimeout(function(){if(!document.hidden)location.href="https://www.youtube.com/results?search_query="+e2},1200)});
 
-var left=1500,iv=null;
+var ART=["art","draw","paint","sketch","illustrat","design","poem","poetry","song","lyric","music","compos","melod","guitar","piano","sing","writ","story","stories","novel","book","script","film","video","photo","edit","animat","craft","sculpt","potter","danc","logo","poster","cover","podcast","record","beat","cartoon","comic","calligraph","knit","sew","carv","color","colour","canvas","mural","fashion"];
+function isArt(t){return t.toLowerCase().split(/[^a-z]+/).some(function(w){return w&&ART.some(function(k){return w.indexOf(k)===0})})}
+var left=0,iv=null,locked=false;
 function fmt(n){return Math.floor(n/60)+":"+String(n%60).padStart(2,"0")}
+function todayS(){return new Date().toLocaleDateString("en-CA")}
+function idleLabel(){return "Start focus \u00b7 "+(isArt($("creating").value)?30:60)+" min"}
+function runLabel(){return fmt(left)+(locked?" \u00b7 locked":"")}
+if(fetchS("creatingDay")===todayS())$("creating").value=fetchS("creating")||"";
+$("tlabel").textContent=idleLabel();
+$("creating").addEventListener("input",function(){store("creating",this.value);store("creatingDay",todayS());if(!iv)$("tlabel").textContent=idleLabel()});
+$("creating").addEventListener("keydown",function(e){if(e.key==="Enter")this.blur()});
+function endSession(msg){clearInterval(iv);iv=null;locked=false;$("screen").classList.remove("running");$("creating").readOnly=false;$("focus").readOnly=false;$("tlabel").textContent=idleLabel();if(msg)toast(msg)}
 $("timer").addEventListener("click",function(){
-  if(iv){clearInterval(iv);iv=null;left=1500;$("screen").classList.remove("running");$("tlabel").textContent="Focus 25:00";toast("Session stopped");return}
-  $("screen").classList.add("running");$("tlabel").textContent=fmt(left);
-  iv=setInterval(function(){left--;$("tlabel").textContent=fmt(left);
-    if(left<=0){clearInterval(iv);iv=null;left=1500;$("screen").classList.remove("running");$("tlabel").textContent="Focus 25:00";toast("Session finished. Take a break.")}},1000)
+  if(iv){if(locked){toast("Locked until the hour ends");return}endSession("Session stopped");return}
+  var art=isArt($("creating").value);left=art?1800:3600;locked=!art;
+  $("screen").classList.add("running");$("creating").readOnly=true;$("focus").readOnly=true;$("tlabel").textContent=runLabel();
+  iv=setInterval(function(){left--;$("tlabel").textContent=runLabel();if(left<=0)endSession("Session finished. Take a break.")},1000)
 });
 
 function render(q){
@@ -149,7 +164,7 @@ document.addEventListener("touchend",function(e){var dy=e.changedTouches[0].clie
 var urls={"Notes":"mobilenotes://","Freeform":"freeform://","Voice Memos":"voicememos://","Music":"music://","Photos":"photos-redirect://","Files":"shareddocuments://","Maps":"maps://","Phone":"tel:","Messages":"sms:","Mail":"mailto:"};
 function go(n){if(n==="Camera"){$("cam").click();return}if(urls[n]){toast("Opening "+n);location.href=urls[n]}}
 document.addEventListener("click",function(e){var b=e.target.closest("[data-app]");if(b){go(b.dataset.app);if($("drawer").classList.contains("open"))setTimeout(closeD,250)}});
-(function(){try{var c=document.createElement("canvas");c.width=c.height=180;var x=c.getContext("2d");x.fillStyle="#16122A";x.fillRect(0,0,180,180);x.strokeStyle="#9C8CFF";x.lineWidth=7;x.lineCap="round";x.beginPath();x.moveTo(50,110);x.bezierCurveTo(70,40,100,140,130,70);x.stroke();var l=document.createElement("link");l.rel="apple-touch-icon";l.href=c.toDataURL("image/png");document.head.appendChild(l)}catch(e){}})();
+
 var SW=[["#16122A",1],["#000000",1],["#1F3A2E",1],["#F4EFE6",0],["#DDE7F0",0]];
 var DK={"--ink":"#EDEAF8","--mute":"#9189B0","--line":"#342D55","--surface":"#221C3D"};
 var LT={"--ink":"#201A33","--mute":"#6B6483","--line":"#C9C3DB","--surface":"#F3F1F8"};
