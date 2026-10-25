@@ -1,16 +1,10 @@
-Kauncher
+# Kauncher
 
-A calm, minimalist home screen for people who make things. It shows the time, one line for what you’re creating today, and a focus timer. A row of creative tools sits at the bottom, with all your other apps one swipe away.
+A calm, minimalist home screen for people who make things. By Kart Production.
 
-Features
+**Official download (the only one):** https://kartproduction.github.io/kauncher/
 
-Daily focus line, saved on your device
-25-minute focus mode that fades everything else away
-Quick tools: Write, Sketch, Record, Capture, Phone
-Searchable app drawer
-Automatic light and dark mode
+Copies from other websites, chats or app stores are not from us. They may be modified or unsafe.
+Kart Production will never ask you for money, passwords, codes or personal details through Kauncher.
 
-Platforms
-
-Android: a real launcher app (Kotlin and Jetpack Compose), built automatically with GitHub Actions
-iPhone: a web app you add to your Home Screen from Safari
+Copyright (c) 2026 Kart Production. All rights reserved. See LICENSE.
