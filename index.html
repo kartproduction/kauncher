@@ -28,9 +28,6 @@ h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:300;font-size:clamp(
 .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .note{color:var(--mute);font-size:13px;margin-top:10px}
 .me .card{box-shadow:0 0 0 2px var(--accent)}
-.ver{color:var(--ink);font-size:14px;font-weight:500;margin-top:12px}.ver[hidden],.shots[hidden]{display:none}
-.shots{display:flex;gap:12px;overflow-x:auto;margin:22px -26px 0;padding:4px 26px 10px;scroll-snap-type:x mandatory}
-.shots img{height:360px;width:auto;border-radius:20px;border:1.5px solid var(--line);scroll-snap-align:start;flex:none}
 footer{margin-top:40px;color:var(--mute);font-size:13px}
 a{color:inherit}
 </style>
@@ -40,24 +37,17 @@ a{color:inherit}
   <h1>Kauncher</h1>
   <p class="tag">A calm home screen for people who make things.</p>
   <p class="sub">See the time, write down what you’re making today, start a focus session, and reach your creative tools in one tap. Everything else stays out of the way.</p>
-  <ul class="feat"><li>Daily focus line</li><li>Creative and locked focus sessions</li><li>Write, sketch, record, capture, call</li><li>Light and dark</li><li>Tic-Tac-Toe and chess</li><li>Settings and folder backup</li><li>Works with Kalendar by Kasign</li></ul>
-
-  <div class="shots" id="shots" hidden></div>
+  <ul class="feat"><li>Daily focus line</li><li>Auto 30 or 60 minute focus</li><li>Write, sketch, record, capture, call</li><li>Light and dark</li><li>Tic-Tac-Toe and chess</li><li>Settings and folder backup</li><li>Kotepad notepad</li><li>Works with Kalendar by Kasign</li></ul>
 
   <section class="card" id="android">
     <h2>Android</h2>
     <ol>
-      <li>Tap the button to download the APK file (<span id="fn">app-debug.apk</span>).</li>
+      <li>Tap the button to download the APK file (app-debug.apk).</li>
       <li>Open it and allow installs from this source when Android asks.</li>
       <li>Press Home and choose Kauncher as your default home app.</li>
     </ol>
-    <a class="btn" href="https://github.com/kartproduction/kauncher/releases/latest/download/app-debug.apk" download id="dl">Download for Android</a>
-    <p class="ver" id="ver" hidden></p>
-    <p class="note"><a href="https://github.com/kartproduction/kauncher/releases">All versions and release notes</a></p>
-    <p class="note">A full launcher: it lists your installed apps and replaces your home screen. Works on Android 8.0 or newer.</p>
-    <p class="note"><strong>Write, record, capture and call</strong> open your phone’s own notes app, voice recorder, camera and dialer, so everything you make is saved there as usual.</p>
-    <p class="note"><strong>Focus:</strong> creative focus runs 15 to 90 minutes and locked focus 30 to 120 minutes. You choose the lengths in Settings.</p>
-    <p class="note"><strong>Privacy:</strong> Kauncher doesn’t use the internet itself. It only needs to see which apps you have installed (to list them), set your wallpaper, and ask Android to uninstall an app when you choose to. Your folder backup is a text code that you copy and keep yourself. Kauncher doesn’t upload it anywhere.</p>
+    <a class="btn" href="https://github.com/kartproduction/kauncher/releases/latest/download/app-debug.apk" download>Download for Android</a>
+    <p class="note">A full launcher: it lists your installed apps and replaces your home screen.</p>
     <p class="note"><strong>Swipe up</strong> for All apps and <strong>swipe down</strong> to come back home. Long-press an app to uninstall it or see its info.</p>
     <p class="note"><strong>Settings:</strong> choose your focus lengths, theme and clock, back up and restore your folders, and jump to your phone’s own settings. Tap <em>All apps</em>, then <em>Settings</em>.</p>
     <p class="note"><strong>Games:</strong> Tic-Tac-Toe and chess, for two players or against the computer. Tap <em>All apps</em> and choose a game at the top of the list. It is only available when no focus session is running.</p>
@@ -76,6 +66,12 @@ a{color:inherit}
     <p class="note">iPhone doesn’t allow custom home screens, so this works as a focus screen with shortcuts to your apps.</p>
   </section>
 
+  <section class="card" id="kotepad">
+    <h2>Kotepad</h2>
+    <p class="sub" style="margin:10px 0 18px">A calm, simple notepad. Write anything and it is saved on your device. Works on any phone or computer. In the Kauncher app, the Write button opens Kotepad, and your notes are included when you back up.</p>
+    <a class="btn" href="kotepad.html">Open Kotepad</a>
+  </section>
+
   <section class="card" id="kalendar">
     <h2>Kalendar by Kasign</h2>
     <p class="sub" style="margin:10px 0 18px">Also from us: a calendar app that works offline. Kauncher lists it in All apps, so it is one tap away once installed.</p>
@@ -83,29 +79,12 @@ a{color:inherit}
     <p class="note"><a href="https://kartproduction.github.io/kalendarbykasign/">Learn more about Kalendar</a></p>
   </section>
 
-  <footer>Designed by <a href="https://kartproduction.github.io/kart/">Kart Production</a>.<br>© 2026 Kart Production. All rights reserved.<p class="note"><strong>Official download only.</strong> Kauncher is shared only on this site: kartproduction.github.io/kauncher. Copies from other websites, chats or app stores are not from us and may be changed or unsafe. We never ask for money, passwords or codes through Kauncher.</p></footer>
+  <footer>Designed by <a href="https://kartproduction.github.io/kart/">Kart Production</a>.<br>© 2026 Kart Production. All rights reserved.<p class="note"><strong>Official download only.</strong> Kauncher is shared only on this page. Copies from other websites, chats or app stores are not from us and may be changed or unsafe. We never ask for money, passwords or codes through Kauncher.</p></footer>
 </main>
 <script>
 var ua=navigator.userAgent||"";
 var id=/Android/i.test(ua)?"android":(/iPhone|iPad|iPod/i.test(ua)?"iphone":"");
 if(id){var el=document.getElementById(id);el.style.boxShadow="0 0 0 2px var(--accent)";document.querySelector("main").insertBefore(el,document.querySelector(".card"))}
-// Show the newest release (version, size, date) and link straight to its APK.
-fetch("https://api.github.com/repos/kartproduction/kauncher/releases/latest",{cache:"no-store"})
-  .then(function(r){return r.ok?r.json():null}).then(function(r){
-    if(!r)return;
-    var f=(r.assets||[]).filter(function(a){return /\.apk$/i.test(a.name)})[0];
-    if(!f)return;
-    document.getElementById("dl").href=f.browser_download_url;
-    document.getElementById("fn").textContent=f.name;
-    var mb=(f.size/1048576).toFixed(1),d=new Date(r.published_at),
-        ds=isNaN(d)?"":d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
-    var v=document.getElementById("ver");v.textContent="Version "+r.tag_name+" · "+mb+" MB"+(ds?" · "+ds:"");v.hidden=false;
-  }).catch(function(){});
-// Screenshots appear automatically once you add screenshots/1.png, 2.png, 3.png, 4.png.
-(function(){var box=document.getElementById("shots");
-  for(var i=1;i<=4;i++){(function(n){var im=new Image();im.alt="Kauncher screenshot "+n;
-    im.onload=function(){box.hidden=false;box.appendChild(im)};im.src="screenshots/"+n+".png"})(i)}
-})();
 </script>
 </body>
 </html>
