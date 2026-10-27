@@ -2,6 +2,13 @@ name: Build APK
 on:
   push:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Version to publish, for example v2.8 (leave empty to only build)"
+        required: false
+        default: ""
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -33,3 +40,18 @@ jobs:
         with:
           name: kauncher-apk
           path: Kauncher/app/build/outputs/apk/debug/app-debug.apk
+
+      # Publishing: runs only when you push a tag like v2.8, or type a version into "Run workflow".
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.tag != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.inputs.tag || github.ref_name }}
+        run: |
+          NAME=$(grep -oP 'versionName = "\K[^"]+' Kauncher/app/build.gradle.kts)
+          if [ "$TAG" != "v$NAME" ]; then
+            echo "Tag $TAG does not match the app version v$NAME. Change versionName in the app, or use tag v$NAME."
+            exit 1
+          fi
+          gh release create "$TAG" Kauncher/app/build/outputs/apk/debug/app-debug.apk \
+            --target "$GITHUB_SHA" --title "Kauncher $NAME" --generate-notes --latest
