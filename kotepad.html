@@ -136,6 +136,8 @@ $("file").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileRea
  r.readAsText(f);this.value=""};
 window.onresize=function(){if(cur&&isSk(cur)&&!$("ed").hidden)sizeCv()};
 load();render();
+if(/from=app/.test(location.search)){var bk=document.querySelector(".foot a");if(bk){bk.href="app.html";bk.textContent="← Home"}}
+if(location.hash==="#sketch"){history.replaceState(null,"",location.pathname+location.search);$("newsk").click()}
 </script>
 </body>
 </html>

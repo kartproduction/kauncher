@@ -84,11 +84,11 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
     <button class="timer" id="timer" aria-label="Start or stop a focus session"><i></i><span id="tlabel">Focus 25:00</span></button>
   </section>
   <nav class="tools" id="tools">
-    <button class="tool" data-app="Notes"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg>Krite</button>
-    <button class="tool" data-app="Notes"><svg viewBox="0 0 24 24"><path d="M4 16c4-10 8 4 10-4s4-2 6-4"/></svg>Ketch</button>
-    <button class="tool" data-app="Voice Memos"><svg viewBox="0 0 24 24"><rect x="9" y="4" width="6" height="11" rx="3"/><path d="M6 12a6 6 0 0012 0M12 18v3"/></svg>Kord</button>
-    <button class="tool" data-app="Camera"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="12" cy="13" r="3"/></svg>Kapture</button>
-    <button class="tool" data-app="Phone"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>Phone</button>
+    <button class="tool" data-app="Krite"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg>Krite</button>
+    <button class="tool" data-app="Ketch"><svg viewBox="0 0 24 24"><path d="M4 16c4-10 8 4 10-4s4-2 6-4"/></svg>Ketch</button>
+    <button class="tool" data-app="Kord"><svg viewBox="0 0 24 24"><rect x="9" y="4" width="6" height="11" rx="3"/><path d="M6 12a6 6 0 0012 0M12 18v3"/></svg>Kord</button>
+    <button class="tool" data-app="Kapture"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="12" cy="13" r="3"/></svg>Kapture</button>
+    <button class="tool" data-app="Phone"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>Khone</button>
   </nav>
   <div class="handle" id="handle" role="button" tabindex="0" aria-label="Open all apps"><b></b>All apps</div>
 </main>
@@ -177,7 +177,8 @@ document.addEventListener("touchend",function(e){var dy=e.changedTouches[0].clie
   if(!$("drawer").classList.contains("open")&&dy<-70&&y0>window.innerHeight*.5&&!iv)openD();
   else if($("drawer").classList.contains("open")&&dy>110&&$("list").scrollTop===0)closeD()},{passive:true});
 var urls={"Notes":"mobilenotes://","Freeform":"freeform://","Voice Memos":"voicememos://","Music":"music://","Photos":"photos-redirect://","Files":"shareddocuments://","Maps":"maps://","Phone":"tel:","Messages":"sms:","Mail":"mailto:"};
-function go(n){if(n==="Camera"){$("cam").click();return}if(urls[n]){toast("Opening "+n);location.href=urls[n]}}
+var own={"Krite":"kotepad.html?from=app","Ketch":"kotepad.html?from=app#sketch","Kord":"kord.html?from=app","Kapture":"kapture.html?from=app"};
+function go(n){if(own[n]){location.href=own[n];return}if(n==="Camera"){$("cam").click();return}if(urls[n]){toast("Opening "+n);location.href=urls[n]}}
 document.addEventListener("click",function(e){var b=e.target.closest("[data-app]");if(b){go(b.dataset.app);if($("drawer").classList.contains("open"))setTimeout(closeD,250)}});
 
 var SW=[["#16122A",1],["#000000",1],["#1F3A2E",1],["#F4EFE6",0],["#DDE7F0",0]];

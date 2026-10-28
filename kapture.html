@@ -73,6 +73,7 @@ $("vd").onclick=function(){if(cur)save("Kapture-"+cur.id+".jpg",cur.blob)};
 $("vx").onclick=function(){if(!cur)return;if(!sure){sure=1;$("vx").textContent="Tap again";return}del(cur.id).then(refresh).then(function(){cur=null;show("gal")})};
 window.addEventListener("pagehide",stopCam);
 open("kapture").then(function(){return refresh()}).then(function(){show("cam")},function(){msg("Storage is blocked in this browser, so photos can’t be saved.")});
+if(/from=app/.test(location.search)){var bk=document.querySelector(".foot a");if(bk){bk.href="app.html";bk.textContent="← Home"}}
 </script>
 </body>
 </html>
