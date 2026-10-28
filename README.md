@@ -14,11 +14,11 @@ By [Kart Production](https://kartproduction.github.io/kart/).
 
 ## What it does
 
-- **Daily focus line:** type what you are making today, then start a focus session. The session length is chosen automatically (30 or 60 minutes), and you can change the lengths in Settings. While a session is running, the Back button does nothing so it can't reset your session by accident.
+- **Daily focus line:** type what you are making today, then start a focus session. The session length is chosen automatically (30 or 60 minutes), and you can change the lengths in Kettings. While a session is running, the Back button does nothing so it can't reset your session by accident.
 - **Creative shortcuts:** Krite and Ketch open Kotepad for notes and sketches, Kord records your voice, Kapture takes photos, and there is a call shortcut.
 - **Full launcher (Android):** swipe up for all your apps, swipe down to come back home. Long-press an app to see its info or uninstall it.
 - **Folders and backup:** group apps into folders with their own icons. Back up your folders as a text code and paste it back after a reinstall.
-- **Settings:** focus lengths, light or dark theme, clock style, backup and restore, and a shortcut to your phone's own settings.
+- **Kettings:** focus lengths, light or dark theme, clock style, backup and restore, and a shortcut to your phone's own settings.
 - **Games:** Tic-Tac-Toe and chess, for two players or against the computer. They are only available when no focus session is running.
 - **Works with [Kalendar by Kasign](https://github.com/kartproduction/kalendar):** if it is installed, it appears in All apps.
 
