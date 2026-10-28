@@ -21,6 +21,8 @@ body{background:var(--bg);color:var(--ink);font-family:'Instrument Sans',system-
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .screen{height:100%;display:flex;flex-direction:column;padding:28px 26px 18px;max-width:520px;margin:0 auto}
+.screen{overflow-y:auto}.screen>*{flex-shrink:0}
+@media (orientation:landscape) and (max-height:520px){.time{font-size:40px}.mid{justify-content:flex-start;gap:14px;padding:12px 0}.running .time{font-size:28px}}
 .time{font-family:'Bricolage Grotesque',sans-serif;font-weight:300;font-size:64px;letter-spacing:-.03em;line-height:1;transition:font-size .5s}
 .date{color:var(--mute);margin-top:8px;font-size:15px}
 .mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px}
@@ -82,10 +84,10 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
     <button class="timer" id="timer" aria-label="Start or stop a focus session"><i></i><span id="tlabel">Focus 25:00</span></button>
   </section>
   <nav class="tools" id="tools">
-    <button class="tool" data-app="Notes"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg>Write</button>
-    <button class="tool" data-app="Notes"><svg viewBox="0 0 24 24"><path d="M4 16c4-10 8 4 10-4s4-2 6-4"/></svg>Sketch</button>
-    <button class="tool" data-app="Voice Memos"><svg viewBox="0 0 24 24"><rect x="9" y="4" width="6" height="11" rx="3"/><path d="M6 12a6 6 0 0012 0M12 18v3"/></svg>Record</button>
-    <button class="tool" data-app="Camera"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="12" cy="13" r="3"/></svg>Capture</button>
+    <button class="tool" data-app="Notes"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg>Krite</button>
+    <button class="tool" data-app="Notes"><svg viewBox="0 0 24 24"><path d="M4 16c4-10 8 4 10-4s4-2 6-4"/></svg>Ketch</button>
+    <button class="tool" data-app="Voice Memos"><svg viewBox="0 0 24 24"><rect x="9" y="4" width="6" height="11" rx="3"/><path d="M6 12a6 6 0 0012 0M12 18v3"/></svg>Kord</button>
+    <button class="tool" data-app="Camera"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="12" cy="13" r="3"/></svg>Kapture</button>
     <button class="tool" data-app="Phone"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>Phone</button>
   </nav>
   <div class="handle" id="handle" role="button" tabindex="0" aria-label="Open all apps"><b></b>All apps</div>
