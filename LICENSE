@@ -10,4 +10,27 @@ The official and only authorized download is at:
 https://kartproduction.github.io/kauncher/
 
 Any copy obtained elsewhere is not authorized, may have been altered, and is not
-connected to Kart Production. The software is provided "as is", without warranty.
+connected to Kart Production.
+
+THIRD-PARTY MATERIAL
+This license covers only the original code and design created by Kart
+Production. Third-party components (for example Android, Jetpack Compose,
+CameraX and other AndroidX libraries, Kotlin, and any fonts, icons or other
+assets) remain under their own licenses and rights holders, and nothing here
+grants any rights to them.
+
+TRADEMARKS AND NAMES
+The names Kauncher, Kotepad, Kord, Kapture, Krite, Ketch, Kalendar by Kasign
+and Kart Production, and their logos and icons, may not be used for any other
+app, product or service without written permission.
+
+To request permission, contact Kart Production through the GitHub profile:
+https://github.com/kartproduction
+
+NO WARRANTY
+The software is provided "as is", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose and noninfringement. In no event shall the
+authors or copyright holders be liable for any claim, damages or other
+liability arising from, out of or in connection with the software or the use
+or other dealings in the software.
