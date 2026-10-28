@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kapture · Kauncher</title>
+<meta name="description" content="Kapture is a calm, simple camera. Photos are saved on your device.">
+<link rel="icon" href="icon.png">
+<style>
+:root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--accent:#4A35FF;--surface:#F3F1F8;--line:#C9C3DB;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#16122A;--ink:#EDEAF8;--mute:#9189B0;--accent:#9C8CFF;--surface:#221C3D;--line:#342D55}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+main{max-width:720px;margin:0 auto;padding:28px 20px 40px;display:flex;flex-direction:column;gap:14px;min-height:100vh}
+h1{font-weight:300;font-size:clamp(40px,11vw,60px);letter-spacing:-.04em;line-height:1}
+.sub,.foot{color:var(--mute);font-size:14px}
+.foot{margin-top:auto;padding-top:18px}
+button{font:inherit;font-size:15px;border:1.5px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:9px 18px;cursor:pointer}
+button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#msg{color:var(--mute);min-height:1.4em}
+a{color:inherit}
+[hidden]{display:none!important}
+#cam,#gal,#viewer{display:flex;flex-direction:column;gap:12px}
+#vw{background:#000;border-radius:20px;overflow:hidden;aspect-ratio:3/4;max-height:70vh;width:100%;display:flex;justify-content:center}
+#v{height:100%;max-width:100%;object-fit:cover;width:100%}
+#sh{width:74px;height:74px;border-radius:50%;border:4px solid var(--ink);padding:7px;background:none}
+#sh i{display:block;width:100%;height:100%;border-radius:50%;background:var(--ink)}
+#grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;cursor:pointer;background:var(--line)}
+#big{width:100%;max-height:70vh;object-fit:contain;border-radius:16px;background:var(--surface)}
+
+</style>
+</head>
+<body>
+<main>
+<h1>Kapture</h1>
+<p class="sub">A calm camera. Your photos are saved on this device.</p>
+<div id="msg"></div>
+<section id="cam"><div id="vw"><video id="v" playsinline muted autoplay></video></div>
+<div class="row" style="justify-content:space-between"><button id="g1">Gallery (0)</button><button id="sh" aria-label="Take photo"><i></i></button><button id="flip">Flip</button></div></section>
+<section id="gal" hidden><div class="row"><button id="g2">← Camera</button></div><div id="grid"></div></section>
+<section id="viewer" hidden><div class="row"><button id="vb">← Back</button><button id="vd">Download</button><button id="vx">Delete</button></div><img id="big" alt="Photo"></section>
+<p class="foot">Photos live in this browser on this device and are not uploaded anywhere. If you clear your browser data they are lost, so use Download on the ones you want to keep.</p>
+<p class="foot"><a href="index.html">← Kauncher</a> · © 2026 Kart Production. All rights reserved.</p>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+function msg(t){$("msg").textContent=t}
+var DB;
+function open(n){return new Promise(function(res,rej){var r=indexedDB.open(n,1);r.onupgradeneeded=function(){r.result.createObjectStore("items",{keyPath:"id"})};r.onsuccess=function(){DB=r.result;res()};r.onerror=function(){rej(r.error)}})}
+function st(m){return DB.transaction("items",m).objectStore("items")}
+function all(){return new Promise(function(res){var q=st("readonly").getAll();q.onsuccess=function(){res((q.result||[]).sort(function(a,b){return b.t-a.t}))};q.onerror=function(){res([])}})}
+function put(o){return new Promise(function(res,rej){var q=st("readwrite").put(o);q.onsuccess=res;q.onerror=function(){rej(q.error)}})}
+function del(id){return new Promise(function(res){var q=st("readwrite").delete(id);q.onsuccess=res;q.onerror=res})}
+function when(t){var d=new Date(t);return d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})+" · "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})}
+function save(name,blob){var a=document.createElement("a"),u=URL.createObjectURL(blob);a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+var stream=null,facing="environment",items=[],urls=[],cur=null,sure=0;
+function show(w){["cam","gal","viewer"].forEach(function(i){$(i).hidden=i!==w});if(w==="cam")startCam();else stopCam()}
+function startCam(){stopCam();msg("");if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){msg("This browser can’t use the camera.");return}
+ navigator.mediaDevices.getUserMedia({video:{facingMode:facing},audio:false}).then(function(s){stream=s;var v=$("v");v.srcObject=s;v.style.transform=facing==="user"?"scaleX(-1)":"none";v.play()}).catch(function(){msg("Kapture needs permission to use the camera.")})}
+function stopCam(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
+function refresh(){urls.forEach(URL.revokeObjectURL);urls=[];return all().then(function(L){items=L;$("g1").textContent="Gallery ("+L.length+")";var g=$("grid");g.textContent="";
+ L.forEach(function(p){var im=document.createElement("img"),u=URL.createObjectURL(p.blob);urls.push(u);im.src=u;im.alt="Photo from "+when(p.t);im.onclick=function(){cur=p;sure=0;$("vx").textContent="Delete";$("big").src=u;show("viewer")};g.appendChild(im)});
+ if(!L.length){var e=document.createElement("p");e.className="sub";e.textContent="No photos yet.";g.appendChild(e)}})}
+$("sh").onclick=function(){var v=$("v");if(!v.videoWidth){msg("The camera isn’t ready yet.");return}var c=document.createElement("canvas");c.width=v.videoWidth;c.height=v.videoHeight;c.getContext("2d").drawImage(v,0,0);
+ c.toBlob(function(b){put({id:Date.now().toString(36),t:Date.now(),blob:b}).then(refresh).then(function(){msg("Saved")},function(){msg("Could not save (storage is full or blocked).")})},"image/jpeg",.92)};
+$("flip").onclick=function(){facing=facing==="user"?"environment":"user";startCam()};
+$("g1").onclick=function(){show("gal")};$("g2").onclick=function(){show("cam")};$("vb").onclick=function(){show("gal")};
+$("vd").onclick=function(){if(cur)save("Kapture-"+cur.id+".jpg",cur.blob)};
+$("vx").onclick=function(){if(!cur)return;if(!sure){sure=1;$("vx").textContent="Tap again";return}del(cur.id).then(refresh).then(function(){cur=null;show("gal")})};
+window.addEventListener("pagehide",stopCam);
+open("kapture").then(function(){return refresh()}).then(function(){show("cam")},function(){msg("Storage is blocked in this browser, so photos can’t be saved.")});
+</script>
+</body>
+</html>

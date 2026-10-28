@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kord · Kauncher</title>
+<meta name="description" content="Kord is a calm, simple voice recorder. Recordings are saved on your device.">
+<link rel="icon" href="icon.png">
+<style>
+:root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--accent:#4A35FF;--surface:#F3F1F8;--line:#C9C3DB;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#16122A;--ink:#EDEAF8;--mute:#9189B0;--accent:#9C8CFF;--surface:#221C3D;--line:#342D55}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+main{max-width:720px;margin:0 auto;padding:28px 20px 40px;display:flex;flex-direction:column;gap:14px;min-height:100vh}
+h1{font-weight:300;font-size:clamp(40px,11vw,60px);letter-spacing:-.04em;line-height:1}
+.sub,.foot{color:var(--mute);font-size:14px}
+.foot{margin-top:auto;padding-top:18px}
+button{font:inherit;font-size:15px;border:1.5px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:9px 18px;cursor:pointer}
+button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#msg{color:var(--mute);min-height:1.4em}
+a{color:inherit}
+[hidden]{display:none!important}
+#rb{width:96px;height:96px;border-radius:50%;border:4px solid var(--ink);padding:9px;background:none}
+#rb i{display:block;width:100%;height:100%;border-radius:50%;background:var(--ink)}
+#rb.rec i{background:#D64545;border-radius:12px}
+#tm{font-size:48px;font-weight:300;letter-spacing:-.02em}
+#top{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 0 18px;border-bottom:1.5px solid var(--line)}
+.item{background:var(--surface);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.item b{font-weight:600}
+audio{width:100%}
+
+</style>
+</head>
+<body>
+<main>
+<h1>Kord</h1>
+<p class="sub">A calm voice recorder. Your recordings are saved on this device.</p>
+<div id="top"><div id="tm">0:00</div><button id="rb" aria-label="Record"><i></i></button><div class="sub" id="hint">Tap to record</div></div>
+<div id="msg"></div>
+<div id="list" style="display:flex;flex-direction:column;gap:12px"></div>
+<p class="foot">Recordings live in this browser on this device and are not uploaded anywhere. If you clear your browser data they are lost, so use Download on the ones you want to keep.</p>
+<p class="foot"><a href="index.html">← Kauncher</a> · © 2026 Kart Production. All rights reserved.</p>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+function msg(t){$("msg").textContent=t}
+var DB;
+function open(n){return new Promise(function(res,rej){var r=indexedDB.open(n,1);r.onupgradeneeded=function(){r.result.createObjectStore("items",{keyPath:"id"})};r.onsuccess=function(){DB=r.result;res()};r.onerror=function(){rej(r.error)}})}
+function st(m){return DB.transaction("items",m).objectStore("items")}
+function all(){return new Promise(function(res){var q=st("readonly").getAll();q.onsuccess=function(){res((q.result||[]).sort(function(a,b){return b.t-a.t}))};q.onerror=function(){res([])}})}
+function put(o){return new Promise(function(res,rej){var q=st("readwrite").put(o);q.onsuccess=res;q.onerror=function(){rej(q.error)}})}
+function del(id){return new Promise(function(res){var q=st("readwrite").delete(id);q.onsuccess=res;q.onerror=res})}
+function when(t){var d=new Date(t);return d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"})+" · "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})}
+function save(name,blob){var a=document.createElement("a"),u=URL.createObjectURL(blob);a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},1000)}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+var rec=null,chunks=[],stream=null,t0=0,tick=null,mime="",urls=[],sure=null;
+function pick(){var c=["audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg"];for(var i=0;i<c.length;i++){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(c[i]))return c[i]}return""}
+function ext(m){return m.indexOf("mp4")>=0?"m4a":m.indexOf("ogg")>=0?"ogg":"webm"}
+function fmt(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+":"+("0"+(s%60)).slice(-2)}
+function start(){msg("");if(!navigator.mediaDevices||!window.MediaRecorder){msg("This browser can’t record audio.");return}
+ navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){stream=s;mime=pick();rec=mime?new MediaRecorder(s,{mimeType:mime}):new MediaRecorder(s);chunks=[];
+  rec.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};rec.onstop=finish;rec.start();t0=Date.now();$("rb").className="rec";$("hint").textContent="Tap to stop and save";
+  tick=setInterval(function(){$("tm").textContent=fmt((Date.now()-t0)/1000)},250)}).catch(function(){msg("Kord needs permission to use the microphone.")})}
+function stop(){if(rec&&rec.state!=="inactive")rec.stop()}
+function finish(){clearInterval(tick);stream.getTracks().forEach(function(t){t.stop()});var dur=(Date.now()-t0)/1000,type=rec.mimeType||mime||"audio/webm",blob=new Blob(chunks,{type:type});rec=null;
+ $("rb").className="";$("hint").textContent="Tap to record";$("tm").textContent="0:00";if(dur<1||!blob.size){msg("Too short to keep.");return}
+ put({id:Date.now().toString(36),t:Date.now(),dur:dur,type:type,blob:blob}).then(render,function(){msg("Could not save (storage is full or blocked).")})}
+function render(){urls.forEach(URL.revokeObjectURL);urls=[];all().then(function(L){var box=$("list");box.textContent="";
+ if(!L.length){var e=document.createElement("p");e.className="sub";e.textContent="No recordings yet.";box.appendChild(e);return}
+ L.forEach(function(c){var d=document.createElement("div");d.className="item";var h=document.createElement("div");h.innerHTML="<b></b> <span class=sub></span>";h.firstChild.textContent=when(c.t);h.lastChild.textContent=fmt(c.dur);d.appendChild(h);
+  var a=document.createElement("audio");a.controls=true;var u=URL.createObjectURL(c.blob);urls.push(u);a.src=u;d.appendChild(a);
+  var r=document.createElement("div");r.className="row";var b1=document.createElement("button");b1.textContent="Download";b1.onclick=function(){save("Kord-"+c.id+"."+ext(c.type),c.blob)};
+  var b2=document.createElement("button");b2.textContent=sure===c.id?"Tap again":"Delete";b2.onclick=function(){if(sure!==c.id){sure=c.id;render();return}sure=null;del(c.id).then(render)};
+  r.appendChild(b1);r.appendChild(b2);d.appendChild(r);box.appendChild(d)})})}
+$("rb").onclick=function(){rec?stop():start()};
+window.addEventListener("pagehide",stop);
+open("kord").then(render,function(){msg("Storage is blocked in this browser, so recordings can’t be saved.")});
+</script>
+</body>
+</html>
