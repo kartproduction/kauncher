@@ -69,6 +69,7 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
 .focus.sm{font-size:clamp(20px,6vw,24px);padding-bottom:10px}
 .hint{color:var(--mute);font-size:13px;margin-top:-12px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.sheet a.row{color:var(--accent);text-decoration:none}
 </style>
 </head>
 <body>
@@ -108,6 +109,12 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
   <button class="row m" id="sharebg">Save photo for lock screen</button>
   <button class="row m" id="resetbg">Reset to default</button>
   <p class="note2">iPhone doesn’t let apps change your lock screen. Save the photo, then set it in Settings → Wallpaper.</p>
+</div></div>
+<div class="menu" id="mjk"><div class="sheet">
+<h3>Try Mojeek</h3>
+<p class="note2" style="font-size:15px;margin:0 0 14px">Mojeek is the alternative search engine that puts the people who use it first.</p>
+<a class="row" id="mjklink" href="https://www.mojeek.com/support/smartphones/#ma" target="_blank" rel="noopener">Get Mojeek</a>
+<button class="row m" id="mjkclose">Not now</button>
 </div></div>
 <input type="file" accept="image/*" id="bgfile" hidden>
 <input type="file" accept="image/*" capture="environment" id="cam" hidden>
@@ -161,7 +168,8 @@ function render(q){
   var h="";q=(q||"").toLowerCase();
   for(var g in groups){var items=groups[g].filter(function(a){return a.toLowerCase().indexOf(q)>-1});
     if(items.length){h+="<h2>"+g+"</h2>"+items.map(function(a){return '<button class="app" data-app="'+a+'">'+a+'</button>'}).join("")}}
-  $("list").innerHTML=h||'<h2>No app matches. Try a shorter name.</h2>'
+  if("mojeek search engine".indexOf(q)>-1){h+='<h2>Suggested</h2><a class="app" href="https://www.mojeek.com/support/smartphones/#ma" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">Mojeek</a>'}
+$("list").innerHTML=h||'<h2>No app matches. Try a shorter name.</h2>'
 }
 render();
 $("search").addEventListener("input",function(){render(this.value)});
@@ -214,6 +222,11 @@ $("sharebg").onclick=function(){
 var lp;
 $("screen").addEventListener("touchstart",function(e){if(e.target.closest("input,button")||$("screen").classList.contains("running"))return;lp=setTimeout(openM,600)},{passive:true});
 ["touchend","touchmove","touchcancel"].forEach(function(n){document.addEventListener(n,function(){clearTimeout(lp)},{passive:true})});
+function mjkHide(){$("mjk").classList.remove("open");store("mjkSeen","1")}
+$("mjkclose").onclick=mjkHide;
+$("mjklink").onclick=mjkHide;
+$("mjk").onclick=function(e){if(e.target===$("mjk"))mjkHide()};
+setTimeout(function(){if(!fetchS("mjkSeen")&&!iv)$("mjk").classList.add("open")},1200);
 applyBg();
 </script>
 </body>

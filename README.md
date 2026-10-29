@@ -37,6 +37,7 @@ On Android these are built in. Photos, recordings, notes and sketches are kept i
 - The Android app does **not** ask for internet permission.
 - It asks for the camera and microphone (for Kapture and Kord), permission to set the wallpaper, and permission to request app uninstalls (for long-press uninstall).
 - Your focus line, folders, notes and settings are stored on your device.
+- Kauncher suggests [Mojeek](https://play.google.com/store/apps/details?id=mojeek.app), a search engine, once after install and in All apps. Tapping it opens its Play Store page (or the Mojeek setup page on iPhone). Kauncher itself still makes no network connections.
 
 ## Get it
 

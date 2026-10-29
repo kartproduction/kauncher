@@ -86,12 +86,19 @@ a{color:inherit}
     <p class="note"><a href="https://kartproduction.github.io/kalendarbykasign/">Learn more about Kalendar</a></p>
   </section>
 
+  <section class="card" id="mojeek">
+    <h2>Mojeek</h2>
+    <p class="sub" style="margin:10px 0 18px">Mojeek is the alternative search engine that puts the people who use it first.</p>
+    <a class="btn" id="mjkbtn" href="https://www.mojeek.com/support/smartphones/#ma" target="_blank" rel="noopener">Get Mojeek</a>
+  </section>
+
   <footer>Designed by <a href="https://kartproduction.github.io/kart/">Kart Production</a>.<br>© 2026 Kart Production. All rights reserved.<p class="note"><strong>Official download only.</strong> Kauncher is shared only on this page. Copies from other websites, chats or app stores are not from us and may be changed or unsafe. We never ask for money, passwords or codes through Kauncher.</p></footer>
 </main>
 <script>
 var ua=navigator.userAgent||"";
 var id=/Android/i.test(ua)?"android":(/iPhone|iPad|iPod/i.test(ua)?"iphone":"");
 if(id){var el=document.getElementById(id);el.style.boxShadow="0 0 0 2px var(--accent)";document.querySelector("main").insertBefore(el,document.querySelector(".card"))}
+if(id==="android")document.getElementById("mjkbtn").href="https://play.google.com/store/apps/details?id=mojeek.app";
 </script>
 </body>
 </html>
