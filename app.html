@@ -59,6 +59,8 @@ body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.focus
 body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122A;--surface:#221C3D}
 .menu{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:8}
 .menu.open{display:flex}
+.mjb{font:inherit;border:1.5px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:11px 20px;margin:10px 8px 0 0;cursor:pointer}.mjb.main{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sheet h3{margin-bottom:8px}.sheet a{color:var(--accent)}
 .sheet{background:var(--surface);border-radius:24px;padding:24px;width:min(86vw,340px)}
 .sheet h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px;margin-bottom:6px}
 .sheet .row{display:block;width:100%;text-align:left;padding:10px 0;font-size:18px}
@@ -69,7 +71,6 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
 .focus.sm{font-size:clamp(20px,6vw,24px);padding-bottom:10px}
 .hint{color:var(--mute);font-size:13px;margin-top:-12px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-.sheet a.row{color:var(--accent);text-decoration:none}
 </style>
 </head>
 <body>
@@ -88,7 +89,7 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
     <button class="tool" data-app="Krite"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/></svg>Krite</button>
     <button class="tool" data-app="Ketch"><svg viewBox="0 0 24 24"><path d="M4 16c4-10 8 4 10-4s4-2 6-4"/></svg>Ketch</button>
     <button class="tool" data-app="Kord"><svg viewBox="0 0 24 24"><rect x="9" y="4" width="6" height="11" rx="3"/><path d="M6 12a6 6 0 0012 0M12 18v3"/></svg>Kord</button>
-    <button class="tool" data-app="Kapture"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="12" cy="13" r="3"/></svg>Kapture</button>
+    <button class="tool" data-app="Kamera"><svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="12" cy="13" r="3"/></svg>Kamera</button>
     <button class="tool" data-app="Phone"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>Khone</button>
   </nav>
   <div class="handle" id="handle" role="button" tabindex="0" aria-label="Open all apps"><b></b>All apps</div>
@@ -110,19 +111,14 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
   <button class="row m" id="resetbg">Reset to default</button>
   <p class="note2">iPhone doesn’t let apps change your lock screen. Save the photo, then set it in Settings → Wallpaper.</p>
 </div></div>
-<div class="menu" id="mjk"><div class="sheet">
-<h3>Try Mojeek</h3>
-<p class="note2" style="font-size:15px;margin:0 0 14px">Mojeek is the alternative search engine that puts the people who use it first.</p>
-<a class="row" id="mjklink" href="https://www.mojeek.com/support/smartphones/#ma" target="_blank" rel="noopener">Get Mojeek</a>
-<button class="row m" id="mjkclose">Not now</button>
-</div></div>
 <input type="file" accept="image/*" id="bgfile" hidden>
 <input type="file" accept="image/*" capture="environment" id="cam" hidden>
+<div class="menu" id="mj"><div class="sheet"><h3>Try Mojeek</h3><p class="note2">The alternative search engine that puts the people who use it first.</p><p class="note2"><a href="https://www.mojeek.com/support/smartphones/#ma" target="_blank" rel="noopener" id="mjl">mojeek.com/support/smartphones</a></p><button class="mjb main" id="mjgo">Get Mojeek</button><button class="mjb" id="mjno">Not now</button></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
 var $=function(i){return document.getElementById(i)};
-var groups={"Make":["Notes","Freeform","Voice Memos","Camera","Music"],"Reference":["Photos","Files","Maps"],"Rest":["Phone","Messages","Mail"]};
+var groups={"Make":["Notes","Freeform","Voice Memos","Camera","Music"],"Reference":["Photos","Files","Maps"],"Rest":["Phone","Messages","Mail"],"Suggested":["Mojeek"]};
 function tick(){var d=new Date();$("time").textContent=d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}).replace(/\s?[AP]M/i,"");$("date").textContent=d.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})}
 tick();setInterval(tick,15000);
 
@@ -163,13 +159,16 @@ $("timer").addEventListener("click",function(){
   startFocus();
 });
 scheduleAuto();
+var MJ="https://www.mojeek.com/support/smartphones/#ma";
+function mjClose(){$("mj").classList.remove("open");try{localStorage.setItem("mojeekSeen","1")}catch(e){}}
+$("mjgo").onclick=function(){mjClose();location.href=MJ};$("mjno").onclick=mjClose;$("mjl").onclick=mjClose;
+setTimeout(function(){var seen=false;try{seen=!!localStorage.getItem("mojeekSeen")}catch(e){}if(!seen)$("mj").classList.add("open")},800);
 
 function render(q){
   var h="";q=(q||"").toLowerCase();
   for(var g in groups){var items=groups[g].filter(function(a){return a.toLowerCase().indexOf(q)>-1});
     if(items.length){h+="<h2>"+g+"</h2>"+items.map(function(a){return '<button class="app" data-app="'+a+'">'+a+'</button>'}).join("")}}
-  if("mojeek search engine".indexOf(q)>-1){h+='<h2>Suggested</h2><a class="app" href="https://www.mojeek.com/support/smartphones/#ma" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">Mojeek</a>'}
-$("list").innerHTML=h||'<h2>No app matches. Try a shorter name.</h2>'
+  $("list").innerHTML=h||'<h2>No app matches. Try a shorter name.</h2>'
 }
 render();
 $("search").addEventListener("input",function(){render(this.value)});
@@ -184,8 +183,8 @@ document.addEventListener("touchstart",function(e){y0=e.touches[0].clientY},{pas
 document.addEventListener("touchend",function(e){var dy=e.changedTouches[0].clientY-y0;
   if(!$("drawer").classList.contains("open")&&dy<-70&&y0>window.innerHeight*.5&&!iv)openD();
   else if($("drawer").classList.contains("open")&&dy>110&&$("list").scrollTop===0)closeD()},{passive:true});
-var urls={"Notes":"mobilenotes://","Freeform":"freeform://","Voice Memos":"voicememos://","Music":"music://","Photos":"photos-redirect://","Files":"shareddocuments://","Maps":"maps://","Phone":"tel:","Messages":"sms:","Mail":"mailto:"};
-var own={"Krite":"kotepad.html?from=app","Ketch":"kotepad.html?from=app#sketch","Kord":"kord.html?from=app","Kapture":"kapture.html?from=app"};
+var urls={"Notes":"mobilenotes://","Freeform":"freeform://","Voice Memos":"voicememos://","Music":"music://","Photos":"photos-redirect://","Files":"shareddocuments://","Maps":"maps://","Phone":"tel:","Messages":"sms:","Mail":"mailto:","Mojeek":"https://www.mojeek.com/support/smartphones/#ma"};
+var own={"Krite":"kotepad.html?from=app","Ketch":"kotepad.html?from=app#sketch","Kord":"kord.html?from=app","Kamera":"kamera.html?from=app"};
 function go(n){if(own[n]){location.href=own[n];return}if(n==="Camera"){$("cam").click();return}if(urls[n]){toast("Opening "+n);location.href=urls[n]}}
 document.addEventListener("click",function(e){var b=e.target.closest("[data-app]");if(b){go(b.dataset.app);if($("drawer").classList.contains("open"))setTimeout(closeD,250)}});
 
@@ -222,11 +221,6 @@ $("sharebg").onclick=function(){
 var lp;
 $("screen").addEventListener("touchstart",function(e){if(e.target.closest("input,button")||$("screen").classList.contains("running"))return;lp=setTimeout(openM,600)},{passive:true});
 ["touchend","touchmove","touchcancel"].forEach(function(n){document.addEventListener(n,function(){clearTimeout(lp)},{passive:true})});
-function mjkHide(){$("mjk").classList.remove("open");store("mjkSeen","1")}
-$("mjkclose").onclick=mjkHide;
-$("mjklink").onclick=mjkHide;
-$("mjk").onclick=function(e){if(e.target===$("mjk"))mjkHide()};
-setTimeout(function(){if(!fetchS("mjkSeen")&&!iv)$("mjk").classList.add("open")},1200);
 applyBg();
 </script>
 </body>
