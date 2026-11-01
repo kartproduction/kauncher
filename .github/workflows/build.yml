@@ -35,11 +35,19 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: cd Kauncher && gradle assembleDebug --no-daemon --console=plain
+        run: cd Kauncher && gradle assembleRelease --no-daemon --console=plain
+      - name: Name and check the APK
+        run: |
+          cp Kauncher/app/build/outputs/apk/release/app-release.apk Kauncher.apk
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* 2>/dev/null | sort -V | tail -1)
+          if [ -x "$BT/aapt2" ] && "$BT/aapt2" dump badging Kauncher.apk | grep -q "application-debuggable"; then
+            echo "ERROR: this APK is still a debug build."; exit 1
+          fi
+          [ -x "$BT/apksigner" ] && "$BT/apksigner" verify --print-certs Kauncher.apk | head -3 || true
       - uses: actions/upload-artifact@v4
         with:
           name: kauncher-apk
-          path: Kauncher/app/build/outputs/apk/debug/app-debug.apk
+          path: Kauncher.apk
 
       # Publishing: runs only when you push a tag like v2.8, or type a version into "Run workflow".
       - name: Publish release
@@ -53,5 +61,5 @@ jobs:
             echo "Tag $TAG does not match the app version v$NAME. Change versionName in the app, or use tag v$NAME."
             exit 1
           fi
-          gh release create "$TAG" Kauncher/app/build/outputs/apk/debug/app-debug.apk \
+          gh release create "$TAG" Kauncher.apk \
             --target "$GITHUB_SHA" --title "Kauncher $NAME" --generate-notes --latest
