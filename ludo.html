@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ludo · Kauncher</title>
+<meta name="description" content="Ludo for 2 to 4 players, with or without the computer.">
+<link rel="icon" href="icon.png">
+<style>
+:root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--accent:#4A35FF;--surface:#F3F1F8;--line:#C9C3DB;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#16122A;--ink:#EDEAF8;--mute:#9189B0;--accent:#9C8CFF;--surface:#221C3D;--line:#342D55}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+main{max-width:720px;margin:0 auto;padding:28px 20px 40px;display:flex;flex-direction:column;align-items:center;gap:14px;min-height:100vh;text-align:center}
+h1{font-weight:300;font-size:clamp(40px,11vw,60px);letter-spacing:-.04em;line-height:1}
+.sub,.foot{color:var(--mute);font-size:14px}
+.foot{margin-top:auto;padding-top:18px}
+button,.btn{font:inherit;font-size:15px;border:1.5px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:9px 18px;cursor:pointer;text-decoration:none}
+button.on,.btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+#st{min-height:1.6em;font-size:18px}
+a{color:inherit}
+[hidden]{display:none!important}
+#cv{border-radius:18px;box-shadow:0 0 0 2px var(--line);touch-action:manipulation;background:#F7F5FB}
+#dice{font-size:44px;font-weight:300;min-width:60px}
+</style>
+</head>
+<body>
+<main>
+<h1>Ludo</h1>
+<p class="sub" id="sc"></p>
+<p class="sub">Roll a 6 to leave home, go around the board, and bring all four tokens to the centre first. Land on another colour to send it home.</p>
+<div id="setup" class="row" style="flex-direction:column;gap:12px">
+ <div class="row"><button id="n2">2 players</button><button id="n3">3 players</button><button id="n4">4 players</button></div>
+ <div class="row"><button id="vc">You vs Computer</button><button id="vf">Friends on this device</button></div>
+ <button id="go" class="on">Start game</button></div>
+<div id="game" hidden style="display:flex;flex-direction:column;align-items:center;gap:12px">
+ <div id="st"></div>
+ <canvas id="cv" aria-label="Ludo board"></canvas>
+ <div class="row"><span id="dice"></span><button id="roll" class="on">Roll the dice</button></div>
+ <div class="row"><button id="again">New game</button></div></div>
+<p class="foot"><a href="kames.html" id="back">← Kames</a> · © 2026 Kart Production. All rights reserved.</p>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+var SK="kames.scores.v1";
+function scores(){try{return JSON.parse(localStorage.getItem(SK))||{}}catch(e){return{}}}
+function showScore(g){var e=$("sc"),s=scores()[g];if(e)e.textContent=s&&(s.w+s.l+s.d)?"Against the computer: won "+s.w+", lost "+s.l+", drew "+s.d:""}
+function addScore(g,o){var a=scores(),s=a[g]||{w:0,l:0,d:0};s[o]=(s[o]||0)+1;a[g]=s;try{localStorage.setItem(SK,JSON.stringify(a))}catch(e){}showScore(g)}
+
+if(/from=app/.test(location.search)){$("back").href="app.html";$("back").textContent="← Home"}
+var T=[],NAMES=["Red","Green","Yellow","Blue"],COL=["#D64545","#2F9E5B","#E0A526","#3B6FD4"],TINT=["#F2C4C4","#BFE3CC","#F3DFA6","#C2D3F2"],ST=[0,13,26,39],SAFE=[0,13,26,39,8,21,34,47];
+function seg(x,y,dx,dy,n){for(var i=0;i<n;i++)T.push([x+dx*i,y+dy*i])}
+seg(1,6,1,0,5);seg(6,5,0,-1,6);seg(7,0,1,0,2);seg(8,1,0,1,5);seg(9,6,1,0,6);seg(14,7,0,1,2);seg(13,8,-1,0,5);seg(8,9,0,1,6);seg(7,14,-1,0,2);seg(6,13,0,-1,5);seg(5,8,-1,0,6);seg(0,7,0,-1,2);
+var HC=[[],[],[],[]],FIN=[[6,7],[7,6],[8,7],[7,8]],BB=[[0,0],[9,0],[9,9],[0,9]],SL=[[1.5,1.5],[3.5,1.5],[1.5,3.5],[3.5,3.5]];
+for(var i=0;i<5;i++){HC[0].push([1+i,7]);HC[1].push([7,1+i]);HC[2].push([13-i,7]);HC[3].push([7,13-i])}
+var P,cur,dice=0,act=[0,2],hum=[0],over=-1,busy=0,n=2,vsC=true,s=1,W=1,cv=$("cv"),g=cv.getContext("2d");
+function isH(c){return hum.indexOf(c)>=0}
+function nextP(){return act[(act.indexOf(cur)+1)%act.length]}
+function pos(c,t){var p=P[c][t];if(p<0)return[BB[c][0]+SL[t][0],BB[c][1]+SL[t][1]];var q=p<=50?T[(ST[c]+p)%52]:p<56?HC[c][p-51]:FIN[c];return[q[0]+.5,q[1]+.5]}
+function mov(c){var r=[],t,p;for(t=0;t<4;t++){p=P[c][t];if(p<0?dice===6:p+dice<=56)r.push(t)}return r}
+function abs(c,p){return(ST[c]+p)%52}
+function score(c,t){var p=P[c][t],np=p<0?0:p+dice,sc=np,d,u;
+ if(p<0)sc+=50;if(np===56)sc+=80;if(p<=50&&np>50)sc+=40;
+ if(np<=50&&SAFE.indexOf(abs(c,np))<0){act.forEach(function(d){if(d!==c)for(u=0;u<4;u++)if(P[d][u]>=0&&P[d][u]<=50&&abs(d,P[d][u])===abs(c,np))sc+=100})}
+ if(np<=50&&SAFE.indexOf(abs(c,np))>=0)sc+=15;return sc+Math.random()}
+function pickBest(c,m){var b=m[0],bs=-1,x;m.forEach(function(t){x=score(c,t);if(x>bs){bs=x;b=t}});return b}
+function doMove(c,t){var p=P[c][t],np=p<0?0:p+dice,extra=dice===6,i,u;P[c][t]=np;
+ if(np<=50&&SAFE.indexOf(abs(c,np))<0)act.forEach(function(d){if(d!==c)for(u=0;u<4;u++)if(P[d][u]>=0&&P[d][u]<=50&&abs(d,P[d][u])===abs(c,np)){P[d][u]=-1;extra=true}});
+ if(np===56)extra=true;
+ if(P[c].every(function(x){return x===56})){over=c;dice=0;if(vsC)addScore("ludo",c===0?"w":"l");draw();return}
+ dice=0;if(extra){draw();auto()}else pass()}
+function pass(){dice=0;cur=nextP();draw();auto()}
+function rollDice(){if(over>=0||dice||busy)return;dice=1+Math.floor(Math.random()*6);var m=mov(cur);draw();
+ if(!m.length){busy=1;setTimeout(function(){busy=0;pass()},900)}
+ else if(!isH(cur)){busy=1;setTimeout(function(){busy=0;doMove(cur,pickBest(cur,m))},800)}}
+function auto(){if(over>=0||isH(cur))return;busy=1;setTimeout(function(){busy=0;rollDice()},700)}
+function cell(x,y,f){g.fillStyle=f;g.fillRect(x*s,y*s,s,s);g.strokeStyle="#B9B2D0";g.lineWidth=1;g.strokeRect(x*s,y*s,s,s)}
+function tri(a,b,c,d,e,f,col){g.fillStyle=col;g.beginPath();g.moveTo(a*s,b*s);g.lineTo(c*s,d*s);g.lineTo(e*s,f*s);g.closePath();g.fill()}
+function draw(){if(!W)return;g.fillStyle="#F7F5FB";g.fillRect(0,0,W,W);var c,t;
+ for(c=0;c<4;c++){g.fillStyle=TINT[c];g.fillRect(BB[c][0]*s,BB[c][1]*s,6*s,6*s);g.fillStyle="#F7F5FB";g.fillRect((BB[c][0]+1)*s,(BB[c][1]+1)*s,4*s,4*s)}
+ T.forEach(function(p,i){var k=ST.indexOf(i);cell(p[0],p[1],k>=0?COL[k]:SAFE.indexOf(i)>=0?"#E4DDF3":"#fff");if(k<0&&SAFE.indexOf(i)>=0){g.fillStyle="#7a6fa3";g.font=(s*.5)+"px sans-serif";g.textAlign="center";g.textBaseline="middle";g.fillText("★",(p[0]+.5)*s,(p[1]+.55)*s)}});
+ HC.forEach(function(col,k){col.forEach(function(p){cell(p[0],p[1],COL[k])})});
+ tri(6,6,7.5,7.5,6,9,COL[0]);tri(6,6,9,6,7.5,7.5,COL[1]);tri(9,6,9,9,7.5,7.5,COL[2]);tri(6,9,9,9,7.5,7.5,COL[3]);
+ var seen={},mv=(dice&&isH(cur)&&over<0)?mov(cur):[];
+ act.forEach(function(c){for(t=0;t<4;t++){var q=pos(c,t),key=q[0]+","+q[1],k=seen[key]||0;seen[key]=k+1;var x=(q[0]+k*.14)*s,y=(q[1]-k*.14)*s;
+  g.beginPath();g.arc(x,y,s*.34,0,7);g.fillStyle=COL[c];g.fill();g.lineWidth=2;g.strokeStyle="#fff";g.stroke();
+  if(c===cur&&mv.indexOf(t)>=0){g.beginPath();g.arc(x,y,s*.44,0,7);g.lineWidth=3;g.strokeStyle="#201A33";g.stroke()}}});
+ $("dice").textContent=dice?"⚀⚁⚂⚃⚄⚅".charAt(dice-1):"";
+ $("roll").disabled=!(over<0&&!dice&&isH(cur)&&!busy);
+ $("st").textContent=over>=0?NAMES[over]+" wins! 🎉":NAMES[cur]+(isH(cur)?(dice?": tap a glowing token":": roll the dice"):" (computer) is playing…")}
+function size(){var w=Math.min(innerWidth*.92,480),d=window.devicePixelRatio||1;cv.style.width=cv.style.height=w+"px";cv.width=cv.height=Math.round(w*d);g.setTransform(d,0,0,d,0,0);W=w;s=w/15;draw()}
+cv.onclick=function(e){if(over>=0||!dice||!isH(cur)||busy)return;var r=cv.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*15,y=(e.clientY-r.top)/r.height*15,m=mov(cur),best=-1,bd=.7;
+ m.forEach(function(t){var q=pos(cur,t),d=Math.hypot(q[0]-x,q[1]-y);if(d<bd){bd=d;best=t}});if(best>=0)doMove(cur,best)};
+$("roll").onclick=rollDice;
+function ui(){[2,3,4].forEach(function(k){$("n"+k).className=n===k?"on":""});$("vc").className=vsC?"on":"";$("vf").className=vsC?"":"on"}
+[2,3,4].forEach(function(k){$("n"+k).onclick=function(){n=k;ui()}});$("vc").onclick=function(){vsC=true;ui()};$("vf").onclick=function(){vsC=false;ui()};
+function start(){act=[[0,2],[0,1,2],[0,1,2,3]][n-2];hum=vsC?[0]:act.slice();P=[0,1,2,3].map(function(){return[-1,-1,-1,-1]});cur=act[0];dice=0;over=-1;busy=0;$("setup").hidden=true;$("game").hidden=false;size();auto()}
+$("go").onclick=start;$("again").onclick=function(){$("game").hidden=true;$("setup").hidden=false};
+window.addEventListener("resize",function(){if(!$("game").hidden)size()});ui();
+showScore("ludo");
+</script>
+</body>
+</html>

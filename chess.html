@@ -26,14 +26,20 @@ a{color:var(--mute);font-size:14px}
 </head>
 <body>
 <h1>Chess</h1>
+<p class="sub" id="sc"></p>
 <div class="row"><button id="m0">2 players</button><button id="m1">vs Computer</button></div>
 <div class="row" id="lv"><button id="e0">Easy</button><button id="e1">Hard</button></div>
 <div id="st"></div>
 <div id="bd"></div>
 <div class="row"><button id="ng">New game</button></div>
-<a href="index.html">← Kauncher</a>
+<a href="kames.html" id="back">← Kames</a>
 <script>
 var $=function(i){return document.getElementById(i)};
+var SK="kames.scores.v1";
+function scores(){try{return JSON.parse(localStorage.getItem(SK))||{}}catch(e){return{}}}
+function showScore(g){var e=$("sc"),s=scores()[g];if(e)e.textContent=s&&(s.w+s.l+s.d)?"Against the computer: won "+s.w+", lost "+s.l+", drew "+s.d:""}
+function addScore(g,o){var a=scores(),s=a[g]||{w:0,l:0,d:0};s[o]=(s[o]||0)+1;a[g]=s;try{localStorage.setItem(SK,JSON.stringify(a))}catch(e){}showScore(g)}
+
 var isW=function(p){return p&&p===p.toUpperCase()};
 var R4=[[1,0],[-1,0],[0,1],[0,-1]],B4=[[1,1],[1,-1],[-1,1],[-1,-1]],N8=[[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]],A8=R4.concat(B4);
 var GL={k:"\u265A",q:"\u265B",r:"\u265C",b:"\u265D",n:"\u265E",p:"\u265F"};
@@ -84,7 +90,7 @@ function draw(){moves=legal(S);over=!moves.length;var ck=chk(S),w=S.t==="w",kp=S
  $("bd").innerHTML=h;
  $("st").textContent=over?(ck?"Checkmate — "+(w?"Black":"White")+" wins":"Stalemate — draw"):(w?"White":"Black")+" to move"+(ck?" (check!)":"");
  $("m0").className=mode?"":"on";$("m1").className=mode?"on":"";$("lv").style.display=mode?"":"none";$("e0").className=hard?"":"on";$("e1").className=hard?"on":""}
-function play(mv){busy=0;S=make(S,mv);last=mv;sel=-1;draw();
+function play(mv){busy=0;S=make(S,mv);last=mv;sel=-1;draw();if(over&&mode)addScore("chess",chk(S)?(S.t==="b"?"w":"l"):"d");
  if(mode&&!over&&S.t==="b"){busy=1;setTimeout(function(){play(best(S,hard))},350)}}
 function newGame(){busy=0;S=init();sel=-1;last=null;draw()}
 $("bd").onclick=function(e){var el=e.target.closest(".s");if(!el||busy||over)return;var s=+el.dataset.s,p=S.b[s],mv;
@@ -93,6 +99,8 @@ $("bd").onclick=function(e){var el=e.target.closest(".s");if(!el||busy||over)ret
 $("m0").onclick=function(){mode=0;newGame()};$("m1").onclick=function(){mode=1;newGame()};
 $("e0").onclick=function(){hard=0;newGame()};$("e1").onclick=function(){hard=1;newGame()};$("ng").onclick=newGame;
 newGame();
+if(/from=app/.test(location.search)){var bk=document.getElementById("back");if(bk){bk.href="app.html";bk.textContent="← Home"}}
+showScore("chess");
 </script>
 </body>
 </html>

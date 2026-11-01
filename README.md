@@ -15,41 +15,44 @@ By [Kart Production](https://kartproduction.github.io/kart/).
 ## What it does
 
 - **Daily focus line:** type what you are making today, then start a focus session. The session length is chosen automatically (30 or 60 minutes), and you can change the lengths in Kettings. While a session is running, the Back button does nothing so it can't reset your session by accident.
-- **Creative shortcuts:** Krite and Ketch open Kotepad for notes and sketches, Kord records your voice, Kapture takes photos, and there is a call shortcut.
-- **Full launcher (Android):** swipe up for all your apps, swipe down to come back home. Long-press an app to see its info or uninstall it.
-- **Folders and backup:** group apps into folders with their own icons. Back up your folders as a text code and paste it back after a reinstall.
-- **Kettings:** focus lengths, light or dark theme, clock style, backup and restore, and a shortcut to your phone's own settings.
-- **Games:** Tic-Tac-Toe and chess, for two players or against the computer. They are only available when no focus session is running.
-- **Works with [Kalendar by Kasign](https://github.com/kartproduction/kalendar):** if it is installed, it appears in All apps.
+- **Focus log:** every finished or stopped session is saved with what you were learning and creating, any note you typed during the session, and how long you worked, in hours and minutes. See today, the last 7 days, your total and your streak.
+- **During focus:** everything is blocked except **Khone**, which opens the phone dialer so you can make a call (not messages). A note box lets you type what you are doing; it is saved to your focus log.
+- **Creative tools:** **Krite** and **Ketch** open Kotepad for notes and sketches, **Kord** records your voice, **Kamera** takes photos and video, and **Khone** opens the phone dialer. During a focus session only Khone works.
+- **Full launcher (Android):** swipe up for all your apps, swipe down to come back home. Long-press an app to see its info or uninstall it. The list is in alphabetical order.
+- **Folders and backup:** group apps into folders with their own icons. Back up your folders, notes, sketches and focus log as a text code and paste it back after a reinstall.
+- **Kettings:** focus lengths, auto-start, screen lock, focus log, light or dark theme, clock style, backup and restore, and shortcuts to your phone's own settings.
+- **Kames:** Bagh-chal, chess, Ludo and Tic-Tac-Toe in one place, for friends or against the computer. Kames remembers your wins, losses and draws against the computer. Kames are only available when no focus session is running.
+- **Works with [Kalendar by Kasign](https://github.com/kartproduction/kalendar):** if it is installed, it appears in All apps. If not, a row there takes you to its download page.
 
 ## Built-in tools
 
 | Tool | What it is |
 | --- | --- |
-| **Kotepad** | A simple notepad. Type notes or draw sketches. Included in backups. |
+| **Kotepad** | A simple notepad. Type notes or draw sketches, with undo and redo. Included in backups. |
 | **Kord** | A voice recorder. |
-| **Kapture** | A camera. |
+| **Kamera** | A camera for photos and video, with pinch or button zoom. |
+| **Kames** | Bagh-chal, chess, Ludo and Tic-Tac-Toe. |
 
-On Android these are built in. Photos, recordings, notes and sketches are kept inside Kauncher, and you can save photos and recordings to your phone's gallery or music folder. The same tools also run in a browser at the links on the official page.
+On Android these are built in. Photos, videos, recordings, notes and sketches are kept inside Kauncher, and you can save photos, videos and recordings to your phone's gallery or music folder. The same tools also run in a browser at the links on the official page.
 
 ## Privacy
 
 - The Android app does **not** ask for internet permission.
-- It asks for the camera and microphone (for Kapture and Kord), permission to set the wallpaper, and permission to request app uninstalls (for long-press uninstall).
-- Your focus line, folders, notes and settings are stored on your device.
-- Kauncher suggests [Mojeek](https://play.google.com/store/apps/details?id=mojeek.app), a search engine, once after install and in All apps. Tapping it opens its Play Store page (or the Mojeek setup page on iPhone). Kauncher itself still makes no network connections.
+- It asks for the camera and microphone (for Kamera and Kord), permission to set the wallpaper, and permission to request app uninstalls (for long-press uninstall).
+- Your focus line, focus log, folders, notes, sketches, scores and settings are stored on your device.
+- Kauncher suggests [Mojeek](https://www.mojeek.com/support/smartphones/#ma), a search engine, once after install and in All apps until you install it. Tapping it opens Mojeek's setup page in your browser. Kauncher itself still makes no network connections.
 
 ## Get it
 
 - **Android:** download the latest APK from the [official page](https://kartproduction.github.io/kauncher/) or from [Releases](https://github.com/kartproduction/kauncher/releases/latest). Android may ask you to allow installs from this source. You may see a Play Protect warning, because Kauncher is not on the Play Store yet. Only install it if you trust the official page. Then press Home and choose Kauncher as your default home app. Needs Android 8.0 or newer.
-- **iPhone:** open the web app in Safari, tap Share, then Add to Home Screen. iPhone doesn't allow custom home screens, so it works as a focus screen with shortcuts.
+- **iPhone:** open the web app in Safari, tap Share, then Add to Home Screen. iPhone doesn't allow custom home screens, so it works as a focus screen with shortcuts. Krite, Ketch, Kord and Kamera open the browser versions inside Kauncher, and Khone opens the phone dialer.
 
 ## How it was made
 
 | Part | What it uses |
 | --- | --- |
 | Android app | Kotlin and Jetpack Compose |
-| Camera | CameraX |
+| Camera and video | CameraX |
 | Build | Gradle (Android Gradle Plugin 8.5, Kotlin 2.0, Java 17) |
 | Web pages | Plain HTML, CSS and JavaScript, one file per tool |
 | Hosting | GitHub Pages for the website and iPhone web app |
@@ -64,9 +67,13 @@ kauncher/
 ├── app.html              # the iPhone web app
 ├── kotepad.html          # Kotepad in the browser
 ├── kord.html             # Kord in the browser
-├── kapture.html          # Kapture in the browser
+├── kamera.html           # Kamera in the browser
+├── kames.html            # Kames: pick a game
+├── baghchal.html         # Bagh-chal
 ├── chess.html            # chess
+├── ludo.html             # Ludo
 ├── tictactoe.html        # Tic-Tac-Toe
+├── screenshots/          # pictures shown on the official page
 ├── build.gradle.kts      # Gradle settings
 ├── settings.gradle.kts
 ├── gradle.properties
@@ -80,8 +87,9 @@ kauncher/
 These notes are for the maintainer.
 
 - The *Build APK* workflow unpacks `Kauncher.zip`, builds the APK with Gradle, and saves it as a downloadable build.
-- It publishes a release only when you push a tag such as `v3.4` or enter a version when running the workflow by hand. The tag must match `versionName` in the app, or the release is stopped.
+- It publishes a release only when you push a tag such as `v4.4` or enter a version when running the workflow by hand. The tag must match `versionName` in the app, or the release is stopped.
 - Official builds are signed with a private key stored in GitHub Secrets. The key is never in the repository. Without it (on your own computer), Gradle uses the normal local debug key.
+- Each update needs a higher `versionName` and `versionCode` in `app/build.gradle.kts`, or Android will not install it over the old version.
 
 ## Contributing
 

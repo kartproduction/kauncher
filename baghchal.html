@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bagh-chal · Kauncher</title>
+<meta name="description" content="Bagh-chal, the tigers and goats game from Nepal. Play two players or against the computer.">
+<link rel="icon" href="icon.png">
+<style>
+:root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--accent:#4A35FF;--surface:#F3F1F8;--line:#C9C3DB;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#16122A;--ink:#EDEAF8;--mute:#9189B0;--accent:#9C8CFF;--surface:#221C3D;--line:#342D55}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+main{max-width:720px;margin:0 auto;padding:28px 20px 40px;display:flex;flex-direction:column;align-items:center;gap:14px;min-height:100vh;text-align:center}
+h1{font-weight:300;font-size:clamp(40px,11vw,60px);letter-spacing:-.04em;line-height:1}
+.sub,.foot{color:var(--mute);font-size:14px}
+.foot{margin-top:auto;padding-top:18px}
+button,.btn{font:inherit;font-size:15px;border:1.5px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:9px 18px;cursor:pointer;text-decoration:none}
+button.on,.btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+#st{min-height:1.6em;font-size:18px}
+a{color:inherit}
+[hidden]{display:none!important}
+svg{width:min(92vw,440px);height:auto;background:var(--surface);border-radius:22px;touch-action:manipulation}
+.ln{stroke:var(--line);stroke-width:3;fill:none}.pt{fill:var(--line)}
+.gt{fill:#F3F1F8;stroke:var(--ink);stroke-width:3}.tg{fill:#E0861F;stroke:var(--ink);stroke-width:3}
+.sl{fill:none;stroke:var(--accent);stroke-width:5}.dt{fill:var(--accent);opacity:.7}
+.lt{font-size:26px;font-weight:600;text-anchor:middle;dominant-baseline:central;fill:#201A33;pointer-events:none}
+</style>
+</head>
+<body>
+<main>
+<h1>Bagh-chal</h1>
+<p class="sub" id="sc"></p>
+<p class="sub">The tigers and goats game from Nepal. Goats: place 20 goats, then trap every tiger. Tigers: jump over goats to capture 5.</p>
+<div class="row"><button id="m0">2 players</button><button id="m1">vs Computer</button></div>
+<div class="row" id="o"><button id="sg">I play Goats</button><button id="stg">I play Tigers</button><button id="e0">Easy</button><button id="e1">Hard</button></div>
+<div id="st"></div>
+<svg id="bd" viewBox="0 0 500 500" role="img" aria-label="Bagh-chal board"></svg>
+<div class="sub" id="ct"></div>
+<div class="row"><button id="ng" class="on">New game</button></div>
+<p class="foot"><a href="kames.html" id="back">← Kames</a> · © 2026 Kart Production. All rights reserved.</p>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+var SK="kames.scores.v1";
+function scores(){try{return JSON.parse(localStorage.getItem(SK))||{}}catch(e){return{}}}
+function showScore(g){var e=$("sc"),s=scores()[g];if(e)e.textContent=s&&(s.w+s.l+s.d)?"Against the computer: won "+s.w+", lost "+s.l+", drew "+s.d:""}
+function addScore(g,o){var a=scores(),s=a[g]||{w:0,l:0,d:0};s[o]=(s[o]||0)+1;a[g]=s;try{localStorage.setItem(SK,JSON.stringify(a))}catch(e){}showScore(g)}
+
+if(/from=app/.test(location.search)){$("back").href="app.html";$("back").textContent="← Home"}
+var S,GT,sel=-1,mode=1,side="G",hard=1,over="",busy=0;
+var D4=[[1,0],[-1,0],[0,1],[0,-1]],D8=D4.concat([[1,1],[1,-1],[-1,1],[-1,-1]]);
+function dirs(i){return((i/5|0)+i%5)%2===0?D8:D4}
+function ok(r,c){return r>=0&&r<5&&c>=0&&c<5}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function gen(S,goat){var m=[],b=S.b,i,r,c;
+ if(goat){if(S.gl>0){for(i=0;i<25;i++)if(!b[i])m.push({f:-1,t:i})}
+  else for(i=0;i<25;i++)if(b[i]===1){r=i/5|0;c=i%5;dirs(i).forEach(function(v){var rr=r+v[0],cc=c+v[1];if(ok(rr,cc)&&!b[rr*5+cc])m.push({f:i,t:rr*5+cc})})}}
+ else for(i=0;i<25;i++)if(b[i]===2){r=i/5|0;c=i%5;dirs(i).forEach(function(v){var rr=r+v[0],cc=c+v[1];if(!ok(rr,cc))return;var t=rr*5+cc;
+  if(!b[t])m.push({f:i,t:t});else if(b[t]===1){var r2=rr+v[0],c2=cc+v[1];if(ok(r2,c2)&&!b[r2*5+c2])m.push({f:i,t:r2*5+c2,x:t})}})}
+ return m}
+function app(S,m,goat){var b=S.b.slice(),gl=S.gl,cp=S.cp;if(goat){if(m.f<0)gl--;else b[m.f]=0;b[m.t]=1}else{b[m.f]=0;b[m.t]=2;if(m.x!==undefined){b[m.x]=0;cp++}}return{b:b,gl:gl,cp:cp}}
+function isCpu(g){return mode===1&&((g?"G":"T")!==side)}
+function ai(){var goat=GT,ms=gen(S,goat);if(!ms.length)return null;
+ if(!hard){var caps=ms.filter(function(m){return m.x!==undefined});return pick(caps.length?caps:ms)}
+ var best=null,bs=-1e9;ms.forEach(function(m){var S2=app(S,m,goat),tm=gen(S2,false),sc;
+  if(goat){sc=-tm.filter(function(x){return x.x!==undefined}).length*20-tm.length}else sc=(m.x!==undefined?100:0)+tm.length;
+  sc+=Math.random();if(sc>bs){bs=sc;best=m}});return best}
+function checkEnd(){if(S.cp>=5)over="Tigers win! Five goats were captured.";else if(!gen(S,GT).length)over=GT?"Tigers win! The goats cannot move.":"Goats win! Every tiger is trapped."}
+function play(m){S=app(S,m,GT);sel=-1;GT=!GT;checkEnd();draw();if(over&&mode)addScore("bagh",(over.indexOf("Goats")===0)===(side==="G")?"w":"l");
+ if(!over&&isCpu(GT)){busy=1;setTimeout(function(){busy=0;var a=ai();if(a)play(a)},500)}}
+function click(i){if(busy||over||isCpu(GT))return;var goat=GT,ms=gen(S,goat),m;
+ if(goat&&S.gl>0){m=ms.filter(function(x){return x.t===i})[0];if(m)play(m);return}
+ m=sel>=0&&ms.filter(function(x){return x.f===sel&&x.t===i})[0];if(m){play(m);return}
+ sel=(S.b[i]===(goat?1:2)&&ms.some(function(x){return x.f===i}))?i:-1;draw()}
+function ln(a,b,c,d){return'<line class="ln" x1="'+a+'" y1="'+b+'" x2="'+c+'" y2="'+d+'"/>'}
+function draw(){var h="",i,x,y,ms=gen(S,GT);
+ for(i=0;i<5;i++)h+=ln(50,50+100*i,450,50+100*i)+ln(50+100*i,50,50+100*i,450);
+ h+=ln(50,50,450,450)+ln(450,50,50,450)+ln(50,250,250,50)+ln(250,50,450,250)+ln(450,250,250,450)+ln(250,450,50,250);
+ for(i=0;i<25;i++){x=50+100*(i%5);y=50+100*(i/5|0);
+  if(!S.b[i])h+='<circle class="pt" cx="'+x+'" cy="'+y+'" r="8"/>';
+  else h+='<circle class="'+(S.b[i]===1?"gt":"tg")+'" cx="'+x+'" cy="'+y+'" r="30"/><text class="lt" x="'+x+'" y="'+y+'">'+(S.b[i]===1?"G":"T")+'</text>';
+  if(i===sel)h+='<circle class="sl" cx="'+x+'" cy="'+y+'" r="38"/>';
+  if(sel>=0&&ms.some(function(m){return m.f===sel&&m.t===i}))h+='<circle class="dt" cx="'+x+'" cy="'+y+'" r="13"/>';
+  h+='<circle data-i="'+i+'" cx="'+x+'" cy="'+y+'" r="44" fill="transparent"/>'}
+ $("bd").innerHTML=h;
+ $("st").textContent=over||(GT?"Goats":"Tigers")+(isCpu(GT)?" (computer) are thinking…":GT&&S.gl>0?": place a goat":": move a piece");
+ $("ct").textContent="Goats left to place: "+S.gl+" · Goats captured: "+S.cp+" of 5";
+ $("m0").className=mode?"":"on";$("m1").className=mode?"on":"";$("o").hidden=!mode;
+ $("sg").className=side==="G"?"on":"";$("stg").className=side==="T"?"on":"";$("e0").className=hard?"":"on";$("e1").className=hard?"on":""}
+function newGame(){var b=Array(25).fill(0);[0,4,20,24].forEach(function(i){b[i]=2});S={b:b,gl:20,cp:0};GT=true;sel=-1;over="";busy=0;draw();
+ if(isCpu(GT)){busy=1;setTimeout(function(){busy=0;var a=ai();if(a)play(a)},500)}}
+$("bd").onclick=function(e){var t=e.target.closest("[data-i]");if(t)click(+t.dataset.i)};
+$("m0").onclick=function(){mode=0;newGame()};$("m1").onclick=function(){mode=1;newGame()};
+$("sg").onclick=function(){side="G";newGame()};$("stg").onclick=function(){side="T";newGame()};
+$("e0").onclick=function(){hard=0;newGame()};$("e1").onclick=function(){hard=1;newGame()};$("ng").onclick=newGame;
+newGame();
+showScore("bagh");
+</script>
+</body>
+</html>

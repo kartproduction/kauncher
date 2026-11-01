@@ -25,6 +25,7 @@ a{color:var(--mute);font-size:14px}
 </head>
 <body>
 <h1>Tic-Tac-Toe</h1>
+<p class="sub" id="sc"></p>
 <div id="setup" class="row" style="flex-direction:column;align-items:center;gap:12px">
   <div class="row"><button class="p" id="m0">2 players</button><button class="p" id="m1">vs Computer</button></div>
   <div class="row" id="lv"><button class="p" id="e0">Easy</button><button class="p" id="e1">Hard</button></div>
@@ -37,9 +38,14 @@ a{color:var(--mute);font-size:14px}
   <div id="bd" style="margin:14px auto"></div>
   <div class="row"><button class="p on" id="again" hidden>Play again</button><button class="p" id="mode">Mode</button></div>
 </div>
-<a href="index.html">← Kauncher</a>
+<a href="kames.html" id="back">← Kames</a>
 <script>
 var $=function(i){return document.getElementById(i)};
+var SK="kames.scores.v1";
+function scores(){try{return JSON.parse(localStorage.getItem(SK))||{}}catch(e){return{}}}
+function showScore(g){var e=$("sc"),s=scores()[g];if(e)e.textContent=s&&(s.w+s.l+s.d)?"Against the computer: won "+s.w+", lost "+s.l+", drew "+s.d:""}
+function addScore(g,o){var a=scores(),s=a[g]||{w:0,l:0,d:0};s[o]=(s[o]||0)+1;a[g]=s;try{localStorage.setItem(SK,JSON.stringify(a))}catch(e){}showScore(g)}
+
 var W=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 var B,cur,res,mode=0,hard=1,busy=0,names=["",""],M=["X","O"];
 function win(m){return W.some(function(w){return w.every(function(i){return B[i]===m})})}
@@ -57,6 +63,7 @@ function play(i){if(res||B[i])return;B[i]=M[cur];busy=0;
  if(win(M[cur]))res=(mode&&cur===1)?"Computer wins! Better luck next time.":"Congratulations, "+names[cur]+" wins!";
  else if(!free().length)res="It's a draw!";
  else{cur=1-cur;if(mode&&cur===1){busy=1;setTimeout(function(){play(cpu())},500)}}
+ if(res&&mode)addScore("ttt",res.indexOf("Computer")===0?"l":res.indexOf("draw")>=0?"d":"w");
  draw()}
 function start(){names=[$("n1").value.trim()||(mode?"Player":"Player 1"),mode?"Computer":($("n2").value.trim()||"Player 2")];
  B=Array(9).fill("");cur=0;res="";busy=0;$("setup").hidden=true;$("game").hidden=false;draw()}
@@ -68,6 +75,8 @@ $("e0").onclick=function(){hard=0;ui()};$("e1").onclick=function(){hard=1;ui()};
 $("go").onclick=start;$("again").onclick=start;
 $("mode").onclick=function(){$("game").hidden=true;$("setup").hidden=false};
 ui();
+if(/from=app/.test(location.search)){var bk=document.getElementById("back");if(bk){bk.href="app.html";bk.textContent="← Home"}}
+showScore("ttt");
 </script>
 </body>
 </html>

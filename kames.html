@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kames · Kauncher</title>
+<meta name="description" content="Kames: Tic-Tac-Toe, chess, Bagh-chal and Ludo. Play online or in the Kauncher app.">
+<link rel="icon" href="icon.png">
+<style>
+:root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--accent:#4A35FF;--surface:#F3F1F8;--line:#C9C3DB;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#16122A;--ink:#EDEAF8;--mute:#9189B0;--accent:#9C8CFF;--surface:#221C3D;--line:#342D55}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+main{max-width:720px;margin:0 auto;padding:28px 20px 40px;display:flex;flex-direction:column;align-items:center;gap:14px;min-height:100vh;text-align:center}
+h1{font-weight:300;font-size:clamp(40px,11vw,60px);letter-spacing:-.04em;line-height:1}
+.sub,.foot{color:var(--mute);font-size:14px}
+.foot{margin-top:auto;padding-top:18px}
+button,.btn{font:inherit;font-size:15px;border:1.5px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:9px 18px;cursor:pointer;text-decoration:none}
+button.on,.btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+#st{min-height:1.6em;font-size:18px}
+a{color:inherit}
+[hidden]{display:none!important}
+.tile{display:block;width:100%;max-width:420px;background:var(--surface);border-radius:22px;padding:18px 22px;text-align:left;color:var(--ink);text-decoration:none}
+.tile b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em}
+.tile .sc{display:block;color:var(--accent);font-size:12px;margin-top:4px}
+.tile span{color:var(--mute);font-size:14px}
+</style>
+</head>
+<body>
+<main>
+<h1>Kames</h1>
+<p class="sub">Four games from Kauncher. Pick one to play right here in your browser. Kames are also built into the Kauncher app for Android, under All apps.</p>
+<a class="tile" href="baghchal.html"><b>Bagh-chal</b><span>Tigers and goats, the board game from Nepal</span><span class="sc" data-g="bagh"></span></a>
+<a class="tile" href="chess.html"><b>Chess</b><span>Full rules, two players or against the computer</span><span class="sc" data-g="chess"></span></a>
+<a class="tile" href="ludo.html"><b>Ludo</b><span>2 to 4 players, with or without the computer</span><span class="sc" data-g="ludo"></span></a>
+<a class="tile" href="tictactoe.html"><b>Tic-Tac-Toe</b><span>Two players or against the computer</span><span class="sc" data-g="ttt"></span></a>
+<p class="foot"><a href="kames.html" id="back">← Kames</a> · © 2026 Kart Production. All rights reserved.</p>
+</main>
+<script>
+var $=function(i){return document.getElementById(i)};
+if(/from=app/.test(location.search)){$("back").href="app.html";$("back").textContent="← Home"}
+
+var SK="kames.scores.v1",all={};try{all=JSON.parse(localStorage.getItem(SK))||{}}catch(e){}
+document.querySelectorAll("[data-g]").forEach(function(e){var s=all[e.dataset.g];if(s&&s.w+s.l+s.d)e.textContent="Against the computer: won "+s.w+", lost "+s.l+", drew "+s.d});
+</script>
+</body>
+</html>
