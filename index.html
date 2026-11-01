@@ -41,7 +41,7 @@ a{color:inherit}
   <h1>Kauncher</h1>
   <p class="tag">A calm home screen for people who make things.</p>
   <p class="sub">See the time, write down what you’re making today, start a focus session, and reach your creative tools in one tap. Everything else stays out of the way.</p>
-  <ul class="feat"><li>Daily focus line</li><li>Auto 30 or 60 minute focus</li><li>Krite, Ketch, Kord, Kamera, Khone</li><li>Light and dark</li><li>Kames: Tic-Tac-Toe, chess, Bagh-chal, Ludo</li><li>Kettings and folder backup</li><li>Kotepad notepad</li><li>Works with Kalendar by Kasign</li></ul>
+  <ul class="feat"><li>Daily focus line</li><li>Auto 30 or 60 minute focus</li><li>Krite, Ketch, Kord, Kamera, Khone</li><li>Light and dark</li><li>Kames: Tic-Tac-Toe, chess, Bagh-chal, Ludo</li><li>Kettings and folder backup</li><li>Kotepad notepad</li><li>Sunday weekly report</li><li>Pause before apps</li><li>Breaks and gentle sound</li><li>Backup to a folder</li><li>Quiet apps</li><li>Home screen widget</li><li>Focus sounds</li><li>Daily intentions</li><li>Phone time cap</li><li>Daily app limits</li><li>Quick capture</li><li>Streak freeze</li><li>Do not disturb during focus</li><li>Add photos of what you made</li><li>Streak on the lock screen</li><li>Search shortcuts</li><li>Works with Kalendar by Kasign</li></ul>
 
   <section class="card" id="shots">
     <h2>See it</h2>
@@ -65,12 +65,31 @@ a{color:inherit}
       <li>Press Home and choose Kauncher as your default home app.</li>
     </ol>
     <a class="btn" href="https://github.com/kartproduction/kauncher/releases/latest/download/Kauncher.apk" download>Download for Android</a>
+    <p class="note">Version 4.5 · <a href="changelog.html">What’s new</a></p>
+    <div id="shabox" hidden>
+      <p class="note"><strong>Check your download.</strong> The SHA-256 checksum of the official Kauncher.apk is:</p>
+      <p class="note"><code id="sha" style="word-break:break-all;color:var(--ink)"></code></p>
+      <p class="note">To compare it with your file, on Windows run <code>certutil -hashfile Kauncher.apk SHA256</code>. On Mac or Linux run <code>shasum -a 256 Kauncher.apk</code>. The two long codes must match exactly. If they don’t, delete the file and download it again from this page.</p>
+    </div>
     <p class="note">A full launcher: it lists your installed apps and replaces your home screen.</p>
     <p class="note"><strong>Swipe up</strong> for All apps and <strong>swipe down</strong> to come back home. Long-press an app to uninstall it or see its info.</p>
     <p class="note"><strong>Built in:</strong> Kotepad for notes and sketches, a camera (Kamera) and a voice recorder (Kord). Photos and recordings are kept inside Kauncher, and you can save any of them to your phone’s gallery or music folder.</p>
     <p class="note"><strong>During focus:</strong> everything is blocked except <strong>Khone</strong>, the phone dialer, so you can make a call. Type what you are doing in the note box and it is saved to your focus log, with the hours you worked.</p>
     <p class="note"><strong>Kettings:</strong> choose your focus lengths, theme and clock, see your focus log with the hours you worked, back up and restore your folders, and jump to your phone’s own settings. Tap <em>All apps</em>, then <em>Kettings</em>.</p>
+    <p class="note"><strong>Weekly report:</strong> turn it on in <em>All apps</em>, then <em>Weekly report</em>. Every Sunday morning Kauncher tells you how long you used your phone last week, which apps you used most, how many hours you focused (with an optional weekly goal and streak), and whether your phone time is more or less than the week before. It is worked out on your phone only and is never uploaded. Android will ask you to allow <em>Usage access</em> first.</p>
+    <p class="note"><strong>Calm tools:</strong> tap <em>All apps</em>, then <em>Kettings</em>, then <em>Calm tools</em>. <strong>Pause before opening</strong> shows a slow breathing screen for 10 seconds before apps you choose, and your weekly report counts the times you decided not to open them. <strong>Quiet apps</strong> are hidden from All apps until you search for their name. You can also long-press any app to set either one.</p>
+    <p class="note"><strong>After a focus session:</strong> Kauncher plays a gentle sound, asks <em>What did you make?</em> (saved to your focus log and your Sunday report), and offers a 5, 10 or 15 minute break. You can turn each of these off.</p>
+    <p class="note"><strong>Automatic backup:</strong> choose a folder once and Kauncher keeps one backup file there with your folders, notes, sketches and focus log, then updates it when you leave the app. Restore it any time from the same screen.</p>
     <p class="note"><strong>Kames:</strong> Tic-Tac-Toe, chess, Bagh-chal and Ludo, for friends or against the computer, and Kames remembers your wins. Tap <em>All apps</em> and open Kames. It is only available when no focus session is running.</p>
+    <p class="note"><strong>Progress at a glance:</strong> your home screen shows today’s focus time and your streak. A small widget with the same two numbers can be added to any other home screen that supports widgets. Tap <em>Today’s intentions</em> to pick up to three things to make today and tick them off. They show in your focus log and your Sunday report.</p>
+    <p class="note"><strong>Focus sounds:</strong> in <em>Calm tools</em> choose rain, a ticking clock or soft noise to play quietly during a session. The sounds are made by your phone, so Kauncher still needs no internet permission.</p>
+    <p class="note"><strong>Phone time cap and app limits:</strong> in your weekly report set a daily cap such as 4 hours. Sunday’s report tells you whether you stayed under it, and a gentle nudge appears the day you pass it. In <em>Calm tools</em> (or by long-pressing an app) give any app a daily limit, such as 30 minutes. After the limit, the pause screen shows every time you open it, and your report counts how often. Both use <em>Usage access</em>, on your phone only.</p>
+    <p class="note"><strong>Quick capture:</strong> tap <em>Krite</em> to start a new note straight away, or hold <em>Kord</em> to start recording straight away.</p>
+    <p class="note"><strong>What you made:</strong> most work is made away from the phone, so after a session (or from the weekly report) you can add a photo or file of it. Photos are shrunk and kept inside Kauncher, and the weekly report shows them as a small gallery. They are not included in backups.</p>
+    <p class="note"><strong>Streak freeze:</strong> one missed day does not break your streak, at most once a week. You can turn it off. <strong>Pause screen:</strong> when you pause before an app, it reminds you of your next unticked intention for the day.</p>
+    <p class="note"><strong>Do not disturb during focus</strong> (optional): Kauncher asks Android for Do Not Disturb access, silences interruptions while a session runs, and puts your old setting back when it ends. <strong>Streak on the lock screen</strong> (optional) draws your streak as your lock screen wallpaper, replacing the current one.</p>
+    <p class="note"><strong>Search shortcuts:</strong> in All apps type <em>n buy milk</em> to save a note to Kotepad, or <em>t 20</em> to start a 20 minute timer in your phone’s clock. In Calm tools you can also hide the focus line or the intentions line on the home screen.</p>
+    <p class="note"><strong>Permissions:</strong> Kauncher still has no internet permission. The optional extras above use Usage access, Do Not Disturb access and the phone’s timer.</p>
     <p class="note"><strong>Seeing a Play Protect warning?</strong> That’s normal. Kauncher isn’t on the Play Store yet, and Google shows this for any app from a new developer. Tap <em>More details</em>, then <em>Install anyway</em>. Only install it if you trust this site.</p>
   </section>
 
@@ -106,7 +125,7 @@ a{color:inherit}
   <section class="card" id="mojeek">
     <h2>We suggest Mojeek</h2>
     <p class="sub" style="margin:10px 0 18px">The alternative search engine that puts the people who use it first.</p>
-    <a class="btn" href="https://www.mojeek.com/support/smartphones/#ma">Get Mojeek</a>
+    <a class="btn" id="mjkbtn" href="https://www.mojeek.com/support/smartphones/#ma">Get Mojeek</a>
     <p class="note">Kauncher shows Mojeek once when you first open it, and keeps it in All apps until you install it.</p>
   </section>
 
@@ -117,12 +136,15 @@ a{color:inherit}
     <p class="note"><a href="https://kartproduction.github.io/kalendarbykasign/">Learn more about Kalendar</a></p>
   </section>
 
-  <footer>Designed by <a href="https://kartproduction.github.io/kart/">Kart Production</a>.<br>© 2026 Kart Production. All rights reserved.<p class="note"><strong>Official download only.</strong> Kauncher is shared only on this page. Copies from other websites, chats or app stores are not from us and may be changed or unsafe. We never ask for money, passwords or codes through Kauncher.</p></footer>
+  <footer><a href="changelog.html">Changelog</a> · <a href="https://github.com/kartproduction/kauncher/releases">All releases</a><br><br>Designed by <a href="https://kartproduction.github.io/kart/">Kart Production</a>.<br>© 2026 Kart Production. All rights reserved.<p class="note"><strong>Official download only.</strong> Kauncher is shared only on this page. Copies from other websites, chats or app stores are not from us and may be changed or unsafe. We never ask for money, passwords or codes through Kauncher.</p></footer>
 </main>
 <script>
 /* The screenshots card only shows pictures that exist in the screenshots folder. */
 document.querySelectorAll("#shots img").forEach(function(i){i.onerror=function(){var f=i.closest("figure");if(f)f.remove();if(!document.querySelector("#shots figure")){var c=document.getElementById("shots");if(c)c.remove()}}});
+/* Show the APK checksum when sha256.txt is published next to this page. */
+fetch("sha256.txt",{cache:"no-store"}).then(function(r){return r.ok?r.text():Promise.reject()}).then(function(t){var h=(t.trim().split(/\s+/)[0]||"").toLowerCase();if(/^[0-9a-f]{64}$/.test(h)){document.getElementById("sha").textContent=h;document.getElementById("shabox").hidden=false}}).catch(function(){});
 var ua=navigator.userAgent||"";
+if(/Android/i.test(ua)){var mb=document.getElementById("mjkbtn");if(mb)mb.href="https://play.google.com/store/apps/details?id=mojeek.app"}
 var id=/Android/i.test(ua)?"android":(/iPhone|iPad|iPod/i.test(ua)?"iphone":"");
 if(id){var el=document.getElementById(id);el.style.boxShadow="0 0 0 2px var(--accent)";document.querySelector("main").insertBefore(el,document.querySelector(".card"))}
 </script>

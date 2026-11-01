@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kauncher changelog</title>
+<link rel="icon" href="icon.png">
+<meta name="description" content="What changed in each version of Kauncher.">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,600&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--accent:#4A35FF;--surface:#F3F1F8;--line:#C9C3DB;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16122A;--ink:#EDEAF8;--mute:#9189B0;--accent:#9C8CFF;--surface:#221C3D;--line:#342D55}}
+:root[data-theme="dark"]{--bg:#16122A;--ink:#EDEAF8;--mute:#9189B0;--accent:#9C8CFF;--surface:#221C3D;--line:#342D55}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Instrument Sans',system-ui,sans-serif;line-height:1.5;min-height:100%}
+main{max-width:640px;margin:0 auto;padding:56px 26px 48px}
+h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:300;font-size:clamp(56px,16vw,96px);letter-spacing:-.04em;line-height:1}
+.tag{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:clamp(22px,5vw,28px);letter-spacing:-.02em;line-height:1.2;margin:22px 0 12px}
+.sub{color:var(--mute);max-width:46ch}
+.feat{list-style:none;padding:0;margin:28px 0 8px;display:flex;flex-wrap:wrap;gap:8px}
+.feat li{border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;color:var(--mute)}
+.card{background:var(--surface);border-radius:22px;padding:24px;margin-top:20px}
+.card h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:24px;letter-spacing:-.02em}
+.card ol{margin:12px 0 20px 20px;color:var(--mute);font-size:15px}
+.card li{margin-bottom:4px}
+.btn{display:inline-block;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:500;padding:13px 22px;border-radius:999px}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.note{color:var(--mute);font-size:13px;margin-top:10px}
+.me .card{box-shadow:0 0 0 2px var(--accent)}
+footer{margin-top:40px;color:var(--mute);font-size:13px}
+a{color:inherit}
+.shots{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 10px;margin-top:14px;scroll-snap-type:x mandatory}
+.shots figure{flex:none;scroll-snap-align:start;margin:0}
+.shots img{display:block;height:380px;width:auto;border-radius:20px;box-shadow:0 0 0 2px var(--line)}
+.shots figcaption{color:var(--mute);font-size:13px;margin-top:6px;text-align:center}
+</style>
+<style>.card ul{margin:12px 0 4px 20px;color:var(--mute);font-size:15px}.card ul li{margin-bottom:8px}.card ul strong{color:var(--ink);font-weight:500}</style>
+</head>
+<body>
+<main>
+  <h1 style="font-size:clamp(40px,12vw,64px)">Changelog</h1>
+  <p class="sub" style="margin-top:12px">What is new in each version of Kauncher. <a href="index.html">Back to download</a></p>
+
+  <section class="card" id="v4-5">
+    <h2>Version 4.5</h2>
+    <ul>
+      <li><strong>Progress on the home screen.</strong> Today’s focus time and your streak show under the date. A small widget with the same two numbers can be added to any home screen that supports widgets.</li>
+      <li><strong>Focus sounds.</strong> Rain, a ticking clock or soft noise, quietly during a session. They are made by the phone itself, so Kauncher still needs no internet permission. Set it in Calm tools.</li>
+      <li><strong>Phone time cap.</strong> Set a daily cap such as 4 hours in the weekly report. Sunday’s report says whether you stayed under it, and a gentle nudge appears the day you pass it.</li>
+      <li><strong>Intentions for the day.</strong> Choose up to three things to make today and tick them off. They show in the focus log and the weekly report, and they are included in backups.</li>
+      <li><strong>Quick capture.</strong> Tap Krite to open a new note straight away. Hold Kord to start recording straight away.</li>
+      <li><strong>Daily app limits.</strong> For example 30 minutes for one app. After the limit, the pause screen shows every time you open it that day. The weekly report shows on how many days you reached each limit and how often the pause appeared.</li>
+      <li><strong>Pause screen reminds you.</strong> It shows your next unticked intention for the day.</li>
+      <li><strong>Streak freeze.</strong> One missed day does not break your streak, at most once a week. You can turn it off.</li>
+      <li><strong>What you made.</strong> Add a photo or file of work you made outside the phone, after a session or from the weekly report. The report shows a small gallery for the week.</li>
+      <li><strong>Do not disturb during focus</strong> (optional). Your old setting comes back when the session ends.</li>
+      <li><strong>Search shortcuts.</strong> Type <em>n buy milk</em> in All apps to save a note, or <em>t 20</em> to start a 20 minute timer.</li>
+      <li><strong>Streak on the lock screen</strong> (optional). Replaces your lock screen wallpaper with your streak.</li>
+      <li><strong>Home screen choices.</strong> Hide the focus line or the intentions line in Calm tools.</li>
+      <li><strong>Website.</strong> A changelog page, and the APK’s SHA-256 checksum so you can check your download.</li>
+    </ul>
+    <p class="note">Phone time cap and app limits need <em>Usage access</em>. Everything is worked out on your phone and nothing is uploaded.</p>
+  </section>
+
+  <section class="card" id="earlier">
+    <h2>Earlier versions</h2>
+    <p class="sub" style="margin-top:10px">Notes for version 4.4 and older are on the <a href="https://github.com/kartproduction/kauncher/releases">releases page</a>.</p>
+  </section>
+
+  <footer>Designed by <a href="https://kartproduction.github.io/kart/">Kart Production</a>.<br>© 2026 Kart Production. All rights reserved.</footer>
+</main>
+</body>
+</html>
