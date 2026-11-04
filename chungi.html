@@ -16,12 +16,21 @@ h1{font-weight:300;font-size:32px;letter-spacing:-.03em}
 #wrap{flex:1;width:min(100%,460px);min-height:0;position:relative}
 canvas{width:100%;height:100%;display:block;border:1.5px solid var(--line);border-radius:20px;touch-action:none}
 a{color:var(--mute);font-size:14px}
+#setup{position:absolute;inset:0;border-radius:20px;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:20px}
+#setup p{color:var(--mute);font-size:15px}
+.row{display:flex;gap:10px}
+button{font:inherit;font-size:18px;color:var(--ink);background:transparent;border:1.5px solid var(--line);border-radius:50px;padding:10px 18px;min-width:52px}
+button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+label{display:flex;gap:10px;align-items:center;font-size:16px}
+#setup input{width:20px;height:20px}
+#go{font-size:20px;padding:12px 34px}
 </style>
 </head>
 <body>
 <h1>Chungi</h1>
 <p class="sub" id="sc"></p>
-<div id="wrap"><canvas id="cv" aria-label="Chungi game. Tap to kick the ball."></canvas></div>
+<div id="wrap"><canvas id="cv" aria-label="Chungi game. Tap to kick the ball."></canvas>
+<div id="setup"><p>Players</p><div class="row" id="np"></div><label><input type="checkbox" id="cpu"> Play against the computer</label><p id="hint"></p><button id="go" class="on">Start</button></div></div>
 <a href="kames.html" id="back">← Kames</a>
 <script>
 var $=function(i){return document.getElementById(i)};
@@ -29,13 +38,29 @@ var BK="kames.chungi.best.v1";
 function getBest(){try{return +localStorage.getItem(BK)||0}catch(e){return 0}}
 function setBest(n){try{localStorage.setItem(BK,n)}catch(e){}}
 var cv=$("cv"),cx=cv.getContext("2d"),W,H,D,best=getBest();
+var cfg={n:1,cpu:false},P=[],turn=0,ROUNDS=3,dec=false,solo=true;
 var ball,score,state="ready",overAt=0,tap=null,pops=[],last=0;
 var COL=["#E8553D","#F2B134","#3DA5D9","#6BBF59","#C65BCF"];
 var dark=matchMedia("(prefers-color-scheme:dark)");
 function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
 function fit(){D=Math.min(devicePixelRatio||1,2);var r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=W*D;cv.height=H*D;cx.setTransform(D,0,0,D,0,0)}
 function reset(){ball={x:W/2,y:H*.18,vx:0,vy:0,r:Math.min(W,H)*.07,a:0,w:0};score=0;pops=[];tap=null}
-function info(){$("sc").textContent=best?"Best: "+best+" kicks":"Keep it in the air. Tap to kick."}
+function cur(){return P[turn%P.length]}
+function lastTurn(){return turn+1>=P.length*ROUNDS}
+function info(){
+  if(solo){$("sc").textContent=best?"Best: "+best+" kicks":"Keep it in the air. Tap to kick.";return}
+  $("sc").textContent="Round "+(Math.floor(turn/P.length)+1)+" of "+ROUNDS+" · "+P.map(function(p){return p.name+" "+p.tot}).join(" · ")}
+function startTurn(){reset();state=cur().cpu?"play":"ready";dec=false;info()}
+function startMatch(){P=[];
+  for(var i=0;i<cfg.n;i++)P.push({name:(cfg.n>1||cfg.cpu)?"Player "+(i+1):"You",cpu:false,tot:0});
+  if(cfg.cpu)P.push({name:"Computer",cpu:true,tot:0});
+  solo=P.length===1;turn=0;$("setup").style.display="none";startTurn()}
+function showSetup(){$("setup").style.display="flex";hint()}
+function hint(){var t=cfg.n+(cfg.cpu?1:0);$("hint").textContent=t===1?"Practice: one chungi, keep your best score.":t+" players, "+ROUNDS+" turns each. Most kicks in total wins."}
+function buildSetup(){var r=$("np");[1,2,3,4].forEach(function(n){var b=document.createElement("button");b.textContent=n;
+  b.onclick=function(){cfg.n=n;mark()};r.appendChild(b)});
+  $("cpu").onchange=function(){cfg.cpu=this.checked;hint()};$("go").onclick=startMatch;mark()}
+function mark(){var bs=$("np").children;for(var i=0;i<4;i++)bs[i].className=cfg.n===i+1?"on":"";hint()}
 var G=function(){return H*1.9};
 function kick(px){
   var b=ball,zone=H*.42;
@@ -50,10 +75,13 @@ function kick(px){
   if(navigator.vibrate)navigator.vibrate(12);
 }
 function end(){state="over";overAt=performance.now();
-  if(score>best){best=score;setBest(best)}info()}
+  if(solo){if(score>best){best=score;setBest(best)}}else cur().tot+=score;info()}
 function step(dt){
   var b=ball;
   if(state==="play"){
+    if(cur().cpu&&b.vy>0&&b.y>H*.6&&!dec){dec=true;
+      if(Math.random()>Math.min(.04+score*.012,.4))kick(b.x+(b.x-W/2)*.4+(Math.random()-.5)*30)}
+    if(b.vy<0)dec=false;
     b.vy+=G()*dt;
     b.vx*=1-.35*dt;                 // air drag on the light ball
     b.x+=b.vx*dt;b.y+=b.vy*dt;b.a+=b.w*dt;b.w*=1-.8*dt;
@@ -103,26 +131,32 @@ function draw(){
   pops.forEach(function(p){cx.globalAlpha=1-p.t/.6;cx.font="300 "+Math.round(H*.035)+"px system-ui,sans-serif";
     cx.fillText("+1",p.x,p.y+22+p.t*40);cx.globalAlpha=1});
   cx.font="300 "+Math.round(H*.036)+"px system-ui,sans-serif";cx.fillStyle=mute;
-  if(state==="ready"){cx.fillText("Tap to drop the chungi",W/2,H*.55);
+  var nm=solo?"":cur().name;
+  if(state==="ready"){cx.fillText(solo?"Tap to drop the chungi":nm+", tap to drop",W/2,H*.55);
     cx.fillText("Then tap below the line to kick",W/2,H*.61)}
-  if(state==="over"){cx.fillStyle=ink;cx.font="300 "+Math.round(H*.06)+"px system-ui,sans-serif";
-    cx.fillText("Dropped at "+score,W/2,H*.5);
+  if(state==="over"){cx.fillStyle=ink;cx.font="300 "+Math.round(H*.055)+"px system-ui,sans-serif";
+    cx.fillText(solo?"Dropped at "+score:nm+" dropped at "+score,W/2,H*.44);
     cx.fillStyle=mute;cx.font="300 "+Math.round(H*.036)+"px system-ui,sans-serif";
-    cx.fillText(score&&score>=best?"New best!":"Best: "+best,W/2,H*.56);
-    cx.fillText("Tap to play again",W/2,H*.62)}
+    if(solo){cx.fillText(score&&score>=best?"New best!":"Best: "+best,W/2,H*.5);cx.fillText("Tap to play again",W/2,H*.56)}
+    else{var L=P.slice().sort(function(a,b){return b.tot-a.tot}),mx=L[0].tot,w=L.filter(function(p){return p.tot===mx});
+      if(lastTurn()){cx.fillStyle=ink;cx.fillText(w.length>1?"It's a tie!":w[0].name+" wins!",W/2,H*.5)}
+      cx.fillStyle=mute;L.forEach(function(p,k){cx.fillText(p.name+": "+p.tot,W/2,H*(.56+k*.045))});
+      cx.fillText(lastTurn()?"Tap to play again":"Tap for "+P[(turn+1)%P.length].name,W/2,H*.8)}}
 }
 function loop(t){var dt=Math.min((t-last)/1000||0,.033);last=t;step(dt);draw();requestAnimationFrame(loop)}
 function press(e){
   e.preventDefault();
   var r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  if($("setup").style.display!=="none"&&getComputedStyle($("setup")).display!=="none")return;
   if(state==="ready"){state="play";ball.vy=0}
-  else if(state==="over"){if(performance.now()-overAt>450){reset();state="ready";info()}}
-  else{kick(x);if(tap)tap.y=y}
+  else if(state==="over"){if(performance.now()-overAt>450){
+    if(solo){reset();state="ready";info()}else if(lastTurn())showSetup();else{turn++;startTurn()}}}
+  else if(!cur().cpu){kick(x);if(tap)tap.y=y}
 }
 cv.addEventListener("pointerdown",press);
 addEventListener("keydown",function(e){if(e.code==="Space"||e.key===" "){press({preventDefault:function(){},clientX:cv.getBoundingClientRect().left+ball.x+(Math.random()-.5)*20,clientY:H})}});
-addEventListener("resize",function(){fit();reset();state="ready";info()});
-fit();reset();info();requestAnimationFrame(loop);
+addEventListener("resize",function(){fit();reset();if(state==="play")state="ready";info()});
+fit();reset();info();buildSetup();requestAnimationFrame(loop);
 if(/from=app/.test(location.search)){var bk=$("back");if(bk){bk.href="app.html";bk.textContent="← Home"}}
 </script>
 </body>

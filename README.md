@@ -21,7 +21,7 @@ By [Kart Production](https://kartproduction.github.io/kart/).
 - **Full launcher (Android):** swipe up for all your apps, swipe down to come back home. Long-press an app to see its info or uninstall it. The list is in alphabetical order.
 - **Folders and backup:** group apps into folders with their own icons. Back up your folders, notes, sketches and focus log as a text code and paste it back after a reinstall.
 - **Kettings:** focus lengths, auto-start, screen lock, focus log, light or dark theme, clock style, backup and restore, and shortcuts to your phone's own settings.
-- **Kames:** Bagh-chal, chess, Chungi, Ludo and Tic-Tac-Toe in one place, for friends, against the computer or on your own. Kames remembers your wins, losses and draws against the computer, and your best Chungi score. Kames are only available when no focus session is running.
+- **Kames:** Bagh-chal, chess, Chungi, Ludo and Tic-Tac-Toe in one place, for friends, against the computer or on your own (Chungi supports one to four players, with an optional computer opponent). Kames remembers your wins, losses and draws against the computer, and your best Chungi score. Kames are only available when no focus session is running.
 - **Works with [Kalendar by Kasign](https://github.com/kartproduction/kalendar):** if it is installed, it appears in All apps. If not, a row there takes you to its download page.
 
 ## Built-in tools
