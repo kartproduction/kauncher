@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kames · Kauncher</title>
-<meta name="description" content="Kames: Tic-Tac-Toe, chess, Bagh-chal and Ludo. Play online or in the Kauncher app.">
+<meta name="description" content="Kames: Tic-Tac-Toe, chess, Bagh-chal, Chungi and Ludo. Play online or in the Kauncher app.">
 <link rel="icon" href="icon.png">
 <style>
 :root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--accent:#4A35FF;--surface:#F3F1F8;--line:#C9C3DB;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -31,9 +31,10 @@ a{color:inherit}
 <body>
 <main>
 <h1>Kames</h1>
-<p class="sub">Four games from Kauncher. Pick one to play right here in your browser. Kames are also built into the Kauncher app for Android, under All apps.</p>
+<p class="sub">Five games from Kauncher. Pick one to play right here in your browser. Kames are also built into the Kauncher app for Android, under All apps.</p>
 <a class="tile" href="baghchal.html"><b>Bagh-chal</b><span>Tigers and goats, the board game from Nepal</span><span class="sc" data-g="bagh"></span></a>
 <a class="tile" href="chess.html"><b>Chess</b><span>Full rules, two players or against the computer</span><span class="sc" data-g="chess"></span></a>
+<a class="tile" href="chungi.html"><b>Chungi</b><span>Keep the rubber-band ball in the air, a game from Nepal</span><span class="sc" id="chb"></span></a>
 <a class="tile" href="ludo.html"><b>Ludo</b><span>2 to 4 players, with or without the computer</span><span class="sc" data-g="ludo"></span></a>
 <a class="tile" href="tictactoe.html"><b>Tic-Tac-Toe</b><span>Two players or against the computer</span><span class="sc" data-g="ttt"></span></a>
 <p class="foot"><a href="kames.html" id="back">← Kames</a> · © 2026 Kart Production. All rights reserved.</p>
@@ -44,6 +45,8 @@ if(/from=app/.test(location.search)){$("back").href="app.html";$("back").textCon
 
 var SK="kames.scores.v1",all={};try{all=JSON.parse(localStorage.getItem(SK))||{}}catch(e){}
 document.querySelectorAll("[data-g]").forEach(function(e){var s=all[e.dataset.g];if(s&&s.w+s.l+s.d)e.textContent="Against the computer: won "+s.w+", lost "+s.l+", drew "+s.d});
+var cb=0;try{cb=+localStorage.getItem("kames.chungi.best.v1")||0}catch(e){}
+if(cb)$("chb").textContent="Best: "+cb+" kicks";
 </script>
 </body>
 </html>
