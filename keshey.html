@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Keshey · Kauncher</title>
+<link rel="icon" href="icon.png">
+<style>
+:root{--bg:#E4E0EE;--ink:#201A33;--mute:#6B6483;--line:#C9C3DB;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#16122A;--ink:#EDEAF8;--mute:#9189B0;--line:#342D55}}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:14px 14px 10px;gap:8px;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+h1{font-weight:300;font-size:32px;letter-spacing:-.03em}
+.sub{color:var(--mute);font-size:14px;text-align:center}
+#wrap{flex:1;width:min(100%,460px);min-height:0;position:relative}
+canvas{width:100%;height:100%;display:block;border:1.5px solid var(--line);border-radius:20px;touch-action:none}
+a{color:var(--mute);font-size:14px}
+#setup{position:absolute;inset:0;border-radius:20px;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px}
+#setup p{color:var(--mute);font-size:15px;line-height:1.4}
+button{font:inherit;font-size:19px;color:var(--bg);background:var(--ink);border:1.5px solid var(--ink);border-radius:50px;padding:12px 26px}
+button.o{background:transparent;color:var(--ink);border-color:var(--line)}
+</style>
+</head>
+<body>
+<h1>Keshey</h1>
+<p class="sub">Hold the waist. Throw your opponent.</p>
+<div id="wrap"><canvas id="cv" aria-label="Keshey wrestling game. Tap your side to push."></canvas>
+<div id="setup"><p>Keshey is the traditional wrestling of Bhutan. Two wrestlers grab each other’s belts and try to throw the other down.</p>
+<p><b>Tap your side to push.</b> Tap too fast and you lose your balance and fall. First to win 2 rounds wins.</p>
+<button id="c1">Play the computer</button><button id="c2" class="o">2 players, one phone</button></div></div>
+<a href="kames.html" id="back">← Kames</a>
+<script>
+var $=function(i){return document.getElementById(i)};
+var cv=$("cv"),cx=cv.getContext("2d"),W,H,D;
+var cpu=true,w=[0,0],round=1,state="setup",p=0,v=0,B=[1,1],lastTap=[0,0],readyAt=0,fightAt=0,ai=0,last=0,msg="",over=0;
+var COL=["#E8553D","#3DA5D9"];
+function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function fit(){D=Math.min(devicePixelRatio||1,2);var r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=W*D;cv.height=H*D;cx.setTransform(D,0,0,D,0,0)}
+function names(i){return cpu?(i?"Computer":"You"):"Player "+(i+1)}
+function startRound(){p=0;v=0;B=[1,1];lastTap=[0,0];state="ready";readyAt=performance.now();ai=0}
+function startMatch(c){cpu=c;w=[0,0];round=1;$("setup").style.display="none";startRound()}
+function tap(i){                               // 0 = bottom player, 1 = top player
+  if(state!=="fight")return;
+  var o=1-i;B[i]-=.09;lastTap[i]=performance.now();
+  v+=(i?-1:1)*.55*(1+(1-B[o])*1.2);            // weaker balance in the opponent = easier to push
+}
+function endRound(win,why){
+  state="round";over=performance.now();w[win]++;
+  msg=names(win)+(win||!cpu?" throws ":" throw ")+names(1-win)+" ("+why+")";
+  if(w[win]===2){state="match";msg=names(win)+(cpu&&!win?" win":" wins")+" the match!"}
+}
+function step(dt,now){
+  if(state==="ready"&&now-readyAt>1200){state="fight";fightAt=now}
+  if(state!=="fight")return;
+  for(var i=0;i<2;i++)B[i]=Math.min(1,B[i]+(now-lastTap[i]>250?.35:.05)*Math.max(.2,1-(now-fightAt)/18000)*dt);   // wrestlers tire, so a round cannot stall
+  if(now-fightAt>15000){B[0]-=.12*dt;B[1]-=.12*dt}   // long bouts end: both wrestlers run out of breath
+  p+=v*dt;v*=Math.exp(-3*dt);
+  if(cpu&&now>ai){if(B[1]>.4)tap(1);ai=now+(B[1]>.6?230:330)+Math.random()*140}
+  if(B[0]<=0)endRound(1,"lost balance");else if(B[1]<=0)endRound(0,"lost balance");
+  else if(p>=1)endRound(0,"out of the ring");else if(p<=-1)endRound(1,"out of the ring");
+}
+function say(t,y,size,col,both){
+  cx.fillStyle=col;cx.textAlign="center";cx.font="300 "+size+"px system-ui,sans-serif";
+  cx.fillText(t,W/2,H*y);
+  if(both&&!cpu){cx.save();cx.translate(W/2,H/2);cx.rotate(Math.PI);cx.fillText(t,0,H*(y-.5)*-1*-1+0);cx.restore()}
+}
+function draw(now){
+  var ink=css("--ink"),mute=css("--mute"),line=css("--line"),cxm=W/2,cy=H/2,R=Math.min(W,H)*.4,r=R*.28;
+  cx.clearRect(0,0,W,H);
+  cx.lineWidth=2;cx.strokeStyle=line;cx.beginPath();cx.arc(cxm,cy,R,0,7);cx.stroke();      // the ring of spectators
+  cx.setLineDash([4,10]);cx.beginPath();cx.arc(cxm,cy,R+14,0,7);cx.stroke();cx.setLineDash([]);
+  cx.beginPath();cx.moveTo(cxm-R,cy);cx.lineTo(cxm+R,cy);cx.globalAlpha=.4;cx.stroke();cx.globalAlpha=1;
+  var mid=cy-p*R*.9;
+  for(var i=0;i<2;i++){
+    var sway=Math.sin(now/90+i*2)*(1-B[i])*r*.7*(state==="fight"?1:0);
+    var x=cxm+sway,y=mid+(i?-1:1)*r*.95;
+    cx.fillStyle=COL[i];cx.beginPath();cx.arc(x,y,r,0,7);cx.fill();
+    cx.strokeStyle=ink;cx.lineWidth=r*.22;cx.beginPath();cx.arc(x,y,r*.62,0,7);cx.stroke();    // the kera (belt)
+    cx.fillStyle=ink;cx.beginPath();cx.arc(x,y+(i?r*.62:-r*.62),r*.12,0,7);cx.fill();
+    // balance bar
+    var by=i?16:H-26,bw=W*.5;
+    cx.fillStyle=line;cx.fillRect(cxm-bw/2,by,bw,8);
+    cx.fillStyle=B[i]>.35?COL[i]:"#C0392B";cx.fillRect(cxm-bw/2,by,bw*Math.max(0,B[i]),8);
+    cx.save();if(i&&!cpu){cx.translate(W/2,H/2);cx.rotate(Math.PI);cx.translate(-W/2,-H/2);by=H-26}
+    cx.fillStyle=mute;cx.font="13px system-ui,sans-serif";cx.textAlign="left";
+    cx.fillText(names(i)+"  "+"●".repeat(w[i])+"○".repeat(2-w[i]),cxm-bw/2,i&&cpu?by+26:by+22-(i?0:34)+(i?0:0));
+    cx.restore();
+  }
+  var s=Math.round(H*.045);
+  if(state==="ready")say(now-readyAt<700?"Hold the waist…":"Keshey!",.5,Math.round(H*.07),ink,true);
+  if(state==="round"){say(msg,.5,s,ink,true);say("Tap to continue",.57,Math.round(H*.034),mute,true)}
+  if(state==="match"){say(msg,.5,Math.round(H*.05),ink,true);say("Tap to play again",.57,Math.round(H*.034),mute,true)}
+}
+function loop(t){var dt=Math.min((t-last)/1000||0,.033);last=t;step(dt,t);draw(t);requestAnimationFrame(loop)}
+cv.addEventListener("pointerdown",function(e){
+  e.preventDefault();var r=cv.getBoundingClientRect(),y=e.clientY-r.top,now=performance.now();
+  if(state==="fight"){var i=y<H/2?1:0;if(cpu&&i)return;tap(i)}
+  else if((state==="round"||state==="match")&&now-over>500){
+    if(state==="match"){state="setup";$("setup").style.display="flex"}else{round++;startRound()}}
+});
+$("c1").onclick=function(){startMatch(true)};$("c2").onclick=function(){startMatch(false)};
+addEventListener("resize",fit);fit();requestAnimationFrame(loop);
+if(/from=app/.test(location.search)){var bk=$("back");bk.href="app.html";bk.textContent="← Home"}
+</script>
+</body>
+</html>
