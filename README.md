@@ -22,7 +22,9 @@ By [Kart Production](https://kartproduction.github.io/kart/).
 - **Folders and backup:** group apps into folders with their own icons. Back up your folders, notes, sketches and focus log as a text code and paste it back after a reinstall.
 - **Kettings:** focus lengths, auto-start, screen lock, focus log, light or dark theme, clock style, backup and restore, and shortcuts to your phone's own settings.
 - **Kames:** Bagh-chal, chess, Chungi, Keshey, Ludo and Tic-Tac-Toe in one place, for friends, against the computer or on your own (Chungi supports one to four players, with an optional computer opponent). Kames remembers your wins, losses and draws against the computer, and your best Chungi score. Kames are only available when no focus session is running.
+- **Nepali date and festivals (optional):** turn on "Show Nepali date and next festival" to see today's Bikram Sambat date and the next Nepali festival or public holiday, with names in English and Nepali. Built in, so it works offline.
 - **Works with [Kalendar by Kasign](https://github.com/kartproduction/kalendar):** if it is installed, it appears in All apps. If not, a row there takes you to its download page.
+- **Suggests [Kutout](https://kartproduction.github.io/kutout/):** a free background remover that runs on your device. If it is not installed, a row in All apps takes you to its page.
 
 ## Built-in tools
 

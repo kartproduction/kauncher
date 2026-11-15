@@ -120,7 +120,7 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
 
 <script>
 var $=function(i){return document.getElementById(i)};
-var groups={"Make":["Notes","Freeform","Voice Memos","Camera","Music"],"Reference":["Photos","Files","Maps"],"Rest":["Phone","Messages","Mail"],"Kauncher":["Kames","Focus log"],"Suggested":["Mojeek"]};
+var groups={"Make":["Notes","Freeform","Voice Memos","Camera","Music"],"Reference":["Photos","Files","Maps"],"Rest":["Phone","Messages","Mail"],"Kauncher":["Kames","Focus log"],"Suggested":["Mojeek","Kutout"]};
 function tick(){var d=new Date();$("time").textContent=d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}).replace(/\s?[AP]M/i,"");$("date").textContent=d.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})}
 tick();setInterval(tick,15000);
 
@@ -187,7 +187,7 @@ document.addEventListener("touchstart",function(e){y0=e.touches[0].clientY},{pas
 document.addEventListener("touchend",function(e){var dy=e.changedTouches[0].clientY-y0;
   if(!$("drawer").classList.contains("open")&&dy<-70&&y0>window.innerHeight*.5&&!iv)openD();
   else if($("drawer").classList.contains("open")&&dy>110&&$("list").scrollTop===0)closeD()},{passive:true});
-var urls={"Notes":"mobilenotes://","Freeform":"freeform://","Voice Memos":"voicememos://","Music":"music://","Photos":"photos-redirect://","Files":"shareddocuments://","Maps":"maps://","Phone":"tel:","Messages":"sms:","Mail":"mailto:","Mojeek":"https://www.mojeek.com/support/smartphones/#ma"};
+var urls={"Notes":"mobilenotes://","Freeform":"freeform://","Voice Memos":"voicememos://","Music":"music://","Photos":"photos-redirect://","Files":"shareddocuments://","Maps":"maps://","Phone":"tel:","Messages":"sms:","Mail":"mailto:","Mojeek":"https://www.mojeek.com/support/smartphones/#ma","Kutout":"https://kartproduction.github.io/kutout/"};
 var own={"Krite":"kotepad.html?from=app","Ketch":"kotepad.html?from=app#sketch","Kord":"kord.html?from=app","Kamera":"kamera.html?from=app","Kames":"kames.html?from=app"};
 function flog(){try{var a=JSON.parse(localStorage.getItem("kauncher.focuslog"));return Array.isArray(a)?a:[]}catch(e){return[]}}
 function dk(t){return new Date(t).toLocaleDateString("en-CA")}
