@@ -25,6 +25,9 @@ By [Kart Production](https://kartproduction.github.io/kart/).
 - **Nepali date and festivals (optional):** turn on "Show Nepali date and next festival" to see today's Bikram Sambat date and the next Nepali festival or public holiday, with names in English and Nepali. Built in, so it works offline.
 - **Works with [Kalendar by Kasign](https://github.com/kartproduction/kalendar):** if it is installed, it appears in All apps. If not, a row there takes you to its download page.
 - **Suggests [Kutout](https://kartproduction.github.io/kutout/):** a free background remover that runs on your device. If it is not installed, a row in All apps takes you to its page.
+- **Calm by default:** on a new install, games, the Nepali date and app suggestions are off. Turn them on in Kettings under Extras.
+- **Updates:** Kettings > Help > Check for updates opens the official download page. To get updates automatically, you can follow this repository's releases with an app such as Obtainium.
+- **Privacy:** see [privacy.html](https://kartproduction.github.io/kauncher/privacy.html).
 
 ## Built-in tools
 
