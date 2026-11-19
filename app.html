@@ -115,12 +115,23 @@ body.photo{--ink:#F5F3FA;--mute:#C9C3DB;--line:rgba(255,255,255,.35);--bg:#16122
 <input type="file" accept="image/*" id="bgfile" hidden>
 <input type="file" accept="image/*" capture="environment" id="cam" hidden>
 <div class="menu" id="mj"><div class="sheet"><h3>Try Mojeek</h3><p class="note2">The alternative search engine that puts the people who use it first.</p><p class="note2"><a href="https://www.mojeek.com/support/smartphones/#ma" target="_blank" rel="noopener" id="mjl">mojeek.com/support/smartphones</a></p><button class="mjb main" id="mjgo">Get Mojeek</button><button class="mjb" id="mjno">Not now</button></div></div>
+<div class="menu" id="wel"><div class="sheet"><h3>Welcome to Kauncher</h3><p class="note2">A calm home screen for people who make things.</p><ol class="note2" style="margin:12px 0 0 18px;line-height:1.5"><li>Write one line about what you are learning or creating today.</li><li>Tap the timer to start a focus session and let the rest wait.</li><li>Swipe up or tap All apps. Swipe down to come back home.</li><li>Keep Kauncher on your Home Screen: tap Share, then Add to Home Screen.</li><li>Games and app suggestions are off to keep things quiet. Turn them on in All apps, under Kauncher, then Extras.</li></ol><button class="mjb main" id="welgo">Got it</button></div></div>
 <div class="menu" id="fl"><div class="sheet" id="flb" style="max-height:75vh;overflow:auto"></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
 var $=function(i){return document.getElementById(i)};
-var groups={"Make":["Notes","Freeform","Voice Memos","Camera","Music"],"Reference":["Photos","Files","Maps"],"Rest":["Phone","Messages","Mail"],"Kauncher":["Kames","Focus log"],"Suggested":["Mojeek","Kutout"]};
+var NE={"What are you learning today?": "आज तपाईं के सिक्दै हुनुहुन्छ?", "What are you creating?": "तपाईं के बनाउँदै हुनुहुन्छ?", "Starts after you type what you are creating. Creative: 30 min. Anything else: 1 hour, locked.": "तपाईं के बनाउँदै हुनुहुन्छ लेखेपछि सुरु हुन्छ। सिर्जनात्मक: ३० मिनेट। अरू जे पनि: १ घण्टा, ताला लगाइएको।", "Type what you are doing. It is saved to your log.": "तपाईं के गर्दै हुनुहुन्छ लेख्नुहोस्। यो तपाईंको लगमा सुरक्षित हुन्छ।", "Find an app": "एप खोज्नुहोस्", "Close": "बन्द गर्नुहोस्", "All apps": "सबै एपहरू", "Background": "पृष्ठभूमि", "Choose a photo": "फोटो छान्नुहोस्", "Save photo for lock screen": "लक स्क्रिनका लागि फोटो सुरक्षित गर्नुहोस्", "Reset to default": "पूर्वनिर्धारितमा फर्काउनुहोस्", "iPhone doesn’t let apps change your lock screen. Save the photo, then set it in Settings → Wallpaper.": "iPhone ले एपहरूलाई लक स्क्रिन बदल्न दिँदैन। फोटो सुरक्षित गर्नुहोस्, त्यसपछि सेटिङ्स → वालपेपरमा राख्नुहोस्।", "Try Mojeek": "Mojeek प्रयोग गर्नुहोस्", "The alternative search engine that puts the people who use it first.": "प्रयोगकर्तालाई पहिलो प्राथमिकता दिने वैकल्पिक सर्च इन्जिन।", "Get Mojeek": "Mojeek लिनुहोस्", "Not now": "अहिले होइन", "Make": "बनाउने", "Reference": "सन्दर्भ", "Rest": "विश्राम", "Suggested": "सुझावहरू", "Notes": "नोट्स", "Voice Memos": "भ्वाइस मेमो", "Camera": "क्यामेरा", "Music": "सङ्गीत", "Photos": "फोटोहरू", "Files": "फाइलहरू", "Maps": "नक्सा", "Phone": "फोन", "Messages": "सन्देश", "Mail": "मेल", "Focus log": "फोकस लग", "Focus": "फोकस", "No app matches. Try a shorter name.": "कुनै एप मेल खाएन। छोटो नाम प्रयास गर्नुहोस्।", "Locked until the hour ends": "घण्टा सकिएसम्म ताला लगाइएको", "Session stopped": "सत्र रोकियो", "Photo too large to save": "फोटो सुरक्षित गर्न धेरै ठूलो छ", "Choose a photo first": "पहिले फोटो छान्नुहोस्", "Saving isn’t supported here": "यहाँ सुरक्षित गर्न मिल्दैन", "Session finished. Take a break.": "सत्र सकियो। अलिकति विश्राम लिनुहोस्।", "Opening ": "खोल्दै ", "Nothing yet. Finish a focus session and it shows up here.": "अहिलेसम्म केही छैन। फोकस सत्र पूरा गर्नुहोस्, यहाँ देखिनेछ।", "Clear log": "लग मेटाउनुहोस्", "Tap again to clear": "मेटाउन फेरि ट्याप गर्नुहोस्", "Today": "आज", "Last 7 days": "पछिल्ला ७ दिन", "Total": "जम्मा", "Streak": "लगातारता", "Learning": "सिकाइ", "stopped early": "चाँडै रोकियो", "Start focus": "फोकस सुरु गर्नुहोस्", "locked": "ताला लगाइएको", "min": "मिनेट", "h": "घण्टा", "day": "दिन", "Extras: games and app suggestions": "अतिरिक्त: खेल र एप सुझाव", "On": "खुला", "Off": "बन्द", "Welcome guide": "स्वागत मार्गदर्शन", "Check for updates": "अपडेट जाँच गर्नुहोस्", "Send feedback": "प्रतिक्रिया पठाउनुहोस्", "Privacy": "गोपनीयता", "Extras": "अतिरिक्त", "Checking for updates": "अपडेट जाँच गर्दै", "Welcome to Kauncher": "Kauncher मा स्वागत छ", "A calm home screen for people who make things.": "केही बनाउने मानिसहरूका लागि शान्त होम स्क्रिन।", "Write one line about what you are learning or creating today.": "आज तपाईं के सिक्दै वा बनाउँदै हुनुहुन्छ, एउटा हरफमा लेख्नुहोस्।", "Tap the timer to start a focus session and let the rest wait.": "फोकस सत्र सुरु गर्न टाइमरमा ट्याप गर्नुहोस् र बाँकी कुरा पर्खिन दिनुहोस्।", "Swipe up or tap All apps. Swipe down to come back home.": "माथि स्वाइप गर्नुहोस् वा “सबै एपहरू” मा ट्याप गर्नुहोस्। घर फर्कन तल स्वाइप गर्नुहोस्।", "Keep Kauncher on your Home Screen: tap Share, then Add to Home Screen.": "Kauncher लाई होम स्क्रिनमा राख्नुहोस्: साझा गर्नुहोस् मा ट्याप गरी “Add to Home Screen” छान्नुहोस्।", "Games and app suggestions are off to keep things quiet. Turn them on in All apps, under Kauncher, then Extras.": "शान्त राख्न खेल र एप सुझाव बन्द छन्। “सबै एपहरू” मा Kauncher अन्तर्गत अतिरिक्त बाट खोल्न सक्नुहुन्छ।", "Got it": "बुझें"};
+var NEP=(navigator.language||"").toLowerCase().indexOf("ne")===0;
+function T(s){return NEP&&NE[s]?NE[s]:s}
+// New installs start calm: games and app suggestions are off until switched on under All apps > Kauncher > Extras.
+// People who already use the app keep everything as it was.
+if(fetchS("freshInstall")===null){try{store("freshInstall",localStorage.length===0?"1":"0")}catch(e){}}
+var fresh=fetchS("freshInstall")==="1";
+var X;if(fetchS("showExtras")===null){X=!fresh;store("showExtras",X?"1":"0")}else X=fetchS("showExtras")==="1";
+function groupsNow(){return {"Make":["Notes","Freeform","Voice Memos","Camera","Music"],"Reference":["Photos","Files","Maps"],"Rest":["Phone","Messages","Mail"],
+  "Kauncher":(X?["Kames"]:[]).concat(["Focus log","Extras","Welcome guide","Check for updates","Send feedback","Privacy"]),"Suggested":X?["Mojeek","Kutout"]:[]}}
+function lbl(a){return a==="Extras"?T("Extras: games and app suggestions")+": "+(X?T("On"):T("Off")):T(a)}
 function tick(){var d=new Date();$("time").textContent=d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}).replace(/\s?[AP]M/i,"");$("date").textContent=d.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"})}
 tick();setInterval(tick,15000);
 
@@ -135,8 +146,8 @@ function isArt(t){return t.toLowerCase().split(/[^a-z]+/).some(function(w){retur
 var left=0,iv=null,locked=false,sessMin=0,sessWhat="";
 function fmt(n){return Math.floor(n/60)+":"+String(n%60).padStart(2,"0")}
 function todayS(){return new Date().toLocaleDateString("en-CA")}
-function idleLabel(){return "Start focus \u00b7 "+(isArt($("creating").value)?30:60)+" min"}
-function runLabel(){return fmt(left)+(locked?" \u00b7 locked":"")}
+function idleLabel(){return T("Start focus")+" \u00b7 "+(isArt($("creating").value)?30:60)+" "+T("min")}
+function runLabel(){return fmt(left)+(locked?" \u00b7 "+T("locked"):"")}
 if(fetchS("creatingDay")===todayS())$("creating").value=fetchS("creating")||"";
 $("tlabel").textContent=idleLabel();
 var autoT=null,lastAuto=$("creating").value;
@@ -145,7 +156,7 @@ function startFocus(){
   left=art?1800:3600;locked=!art;sessMin=art?30:60;sessWhat=v.trim();
   $("screen").classList.add("running");$("creating").readOnly=true;$("focus").readOnly=true;$("note").value="";$("note").hidden=false;$("tlabel").textContent=runLabel();
   clearInterval(iv);
-  iv=setInterval(function(){left--;$("tlabel").textContent=runLabel();if(left<=0)endSession("Session finished. Take a break.")},1000)
+  iv=setInterval(function(){left--;$("tlabel").textContent=runLabel();if(left<=0)endSession(T("Session finished. Take a break."))},1000)
 }
 function scheduleAuto(){
   clearTimeout(autoT);
@@ -153,26 +164,29 @@ function scheduleAuto(){
   var v=$("creating").value;if(v.trim()===""||v===lastAuto)return;
   autoT=setTimeout(function(){if(!iv&&$("creating").value.trim())startFocus()},isArt(v)?3000:6000);
 }
-function fd(m){return m<60?m+" min":Math.floor(m/60)+" h"+(m%60?" "+(m%60)+" min":"")}
+function fd(m){return m<60?m+" "+T("min"):Math.floor(m/60)+" "+T("h")+(m%60?" "+(m%60)+" "+T("min"):"")}
 function logF(w,m,d){if(m<1)return;var a=flog();a.push({t:Date.now(),w:w,m:m,d:d,l:$("focus").value.trim().slice(0,60),n:$("note").value.trim().slice(0,200)});try{localStorage.setItem("kauncher.focuslog",JSON.stringify(a.slice(-2000)))}catch(e){}}
 function endSession(msg){if(iv){if(msg)logF(sessWhat,sessMin,true);else logF(sessWhat,sessMin-Math.ceil(left/60),false)}clearInterval(iv);iv=null;locked=false;$("screen").classList.remove("running");$("creating").readOnly=false;$("focus").readOnly=false;$("note").value="";$("note").hidden=true;$("tlabel").textContent=idleLabel();if(msg)toast(msg)}
 $("creating").addEventListener("input",function(){store("creating",this.value);store("creatingDay",todayS());if(!iv)$("tlabel").textContent=idleLabel();scheduleAuto()});
 $("creating").addEventListener("keydown",function(e){if(e.key==="Enter"){this.blur();if(!iv&&this.value.trim())startFocus()}});
 $("timer").addEventListener("click",function(){
-  if(iv){if(locked){toast("Locked until the hour ends");return}endSession("Session stopped");return}
+  if(iv){if(locked){toast(T("Locked until the hour ends"));return}endSession(null);toast(T("Session stopped"));return}
   startFocus();
 });
 scheduleAuto();
+function welClose(){$("wel").classList.remove("open");store("seenWelcome","1")}
+$("welgo").onclick=welClose;
+setTimeout(function(){if(fresh&&fetchS("seenWelcome")===null)$("wel").classList.add("open")},500);
 var MJ="https://www.mojeek.com/support/smartphones/#ma";
 function mjClose(){$("mj").classList.remove("open");try{localStorage.setItem("mojeekSeen","1")}catch(e){}}
 $("mjgo").onclick=function(){mjClose();location.href=MJ};$("mjno").onclick=mjClose;$("mjl").onclick=mjClose;
-setTimeout(function(){var seen=false;try{seen=!!localStorage.getItem("mojeekSeen")}catch(e){}if(!seen)$("mj").classList.add("open")},800);
+setTimeout(function(){var seen=false;try{seen=!!localStorage.getItem("mojeekSeen")}catch(e){}if(!seen&&X)$("mj").classList.add("open")},800);
 
 function render(q){
   var h="";q=(q||"").toLowerCase();
-  for(var g in groups){var items=groups[g].filter(function(a){return a.toLowerCase().indexOf(q)>-1});
-    if(items.length){h+="<h2>"+g+"</h2>"+items.map(function(a){return '<button class="app" data-app="'+a+'">'+a+'</button>'}).join("")}}
-  $("list").innerHTML=h||'<h2>No app matches. Try a shorter name.</h2>'
+  var GR=groupsNow();for(var g in GR){var items=GR[g].filter(function(a){return (a+" "+lbl(a)).toLowerCase().indexOf(q)>-1});
+    if(items.length){h+="<h2>"+T(g)+"</h2>"+items.map(function(a){return '<button class="app" data-app="'+a+'">'+lbl(a)+'</button>'}).join("")}}
+  $("list").innerHTML=h||'<h2>'+T('No app matches. Try a shorter name.')+'</h2>'
 }
 render();
 $("search").addEventListener("input",function(){render(this.value)});
@@ -192,18 +206,23 @@ var own={"Krite":"kotepad.html?from=app","Ketch":"kotepad.html?from=app#sketch",
 function flog(){try{var a=JSON.parse(localStorage.getItem("kauncher.focuslog"));return Array.isArray(a)?a:[]}catch(e){return[]}}
 function dk(t){return new Date(t).toLocaleDateString("en-CA")}
 function showLog(){var a=flog().sort(function(x,y){return y.t-x.t}),b=$("flb"),days={},today=dk(Date.now()),wk=0,i;b.textContent="";
- var h=document.createElement("h3");h.textContent="Focus log";b.appendChild(h);
+ var h=document.createElement("h3");h.textContent=T("Focus log");b.appendChild(h);
  a.forEach(function(e){(days[dk(e.t)]=days[dk(e.t)]||[]).push(e);if(Date.now()-e.t<7*864e5)wk+=e.m});
  var st=0,d=new Date();if(!days[dk(d)])d.setDate(d.getDate()-1);while(days[dk(d)]){st++;d.setDate(d.getDate()-1)}
- var tm=(days[today]||[]).reduce(function(s,e){return s+e.m},0),p=document.createElement("p");p.className="note2";var tot=a.reduce(function(s,e){return s+e.m},0);p.textContent="Today: "+fd(tm)+" · Last 7 days: "+fd(wk)+" · Total: "+fd(tot)+" · Streak: "+st+" day"+(st===1?"":"s");b.appendChild(p);
- if(!a.length){var n=document.createElement("p");n.className="note2";n.textContent="Nothing yet. Finish a focus session and it shows up here.";b.appendChild(n)}
- Object.keys(days).sort().reverse().forEach(function(k){var t=document.createElement("p");t.className="note2";t.style.marginTop="12px";t.textContent=(k===today?"Today":new Date(k+"T12:00").toLocaleDateString([],{weekday:"short",month:"short",day:"numeric"}))+" · "+fd(days[k].reduce(function(s,e){return s+e.m},0));b.appendChild(t);
-  days[k].forEach(function(e){var r=document.createElement("p");r.textContent=(e.d?"✓ ":"· ")+(e.w||"Focus")+" · "+fd(e.m)+(e.d?"":" (stopped early)");b.appendChild(r);if(e.l){var q=document.createElement("p");q.className="note2";q.textContent="Learning: "+e.l;b.appendChild(q)}if(e.n){var z=document.createElement("p");z.className="note2";z.textContent=e.n;b.appendChild(z)}})});
- var c=document.createElement("button");c.className="mjb main";c.textContent="Close";c.onclick=function(){$("fl").classList.remove("open")};b.appendChild(c);
- if(a.length){var x=document.createElement("button");x.className="mjb";x.textContent="Clear log";x.onclick=function(){if(x.dataset.s){try{localStorage.removeItem("kauncher.focuslog")}catch(e){}showLog()}else{x.dataset.s=1;x.textContent="Tap again to clear"}};b.appendChild(x)}
+ var tm=(days[today]||[]).reduce(function(s,e){return s+e.m},0),p=document.createElement("p");p.className="note2";var tot=a.reduce(function(s,e){return s+e.m},0);p.textContent=T("Today")+": "+fd(tm)+" · "+T("Last 7 days")+": "+fd(wk)+" · "+T("Total")+": "+fd(tot)+" · "+T("Streak")+": "+st+" "+(NEP?T("day"):"day"+(st===1?"":"s"));b.appendChild(p);
+ if(!a.length){var n=document.createElement("p");n.className="note2";n.textContent=T("Nothing yet. Finish a focus session and it shows up here.");b.appendChild(n)}
+ Object.keys(days).sort().reverse().forEach(function(k){var t=document.createElement("p");t.className="note2";t.style.marginTop="12px";t.textContent=(k===today?T("Today"):new Date(k+"T12:00").toLocaleDateString([],{weekday:"short",month:"short",day:"numeric"}))+" · "+fd(days[k].reduce(function(s,e){return s+e.m},0));b.appendChild(t);
+  days[k].forEach(function(e){var r=document.createElement("p");r.textContent=(e.d?"✓ ":"· ")+(e.w||T("Focus"))+" · "+fd(e.m)+(e.d?"":" ("+T("stopped early")+")");b.appendChild(r);if(e.l){var q=document.createElement("p");q.className="note2";q.textContent=T("Learning")+": "+e.l;b.appendChild(q)}if(e.n){var z=document.createElement("p");z.className="note2";z.textContent=e.n;b.appendChild(z)}})});
+ var c=document.createElement("button");c.className="mjb main";c.textContent=T("Close");c.onclick=function(){$("fl").classList.remove("open")};b.appendChild(c);
+ if(a.length){var x=document.createElement("button");x.className="mjb";x.textContent=T("Clear log");x.onclick=function(){if(x.dataset.s){try{localStorage.removeItem("kauncher.focuslog")}catch(e){}showLog()}else{x.dataset.s=1;x.textContent=T("Tap again to clear")}};b.appendChild(x)}
  $("fl").classList.add("open")}
-function go(n){if(n==="Focus log"){showLog();return}if(own[n]){location.href=own[n];return}if(n==="Camera"){$("cam").click();return}if(urls[n]){toast("Opening "+n);location.href=urls[n]}}
-document.addEventListener("click",function(e){var b=e.target.closest("[data-app]");if(b){go(b.dataset.app);if($("drawer").classList.contains("open"))setTimeout(closeD,250)}});
+function go(n){if(n==="Focus log"){showLog();return}
+if(n==="Extras"){X=!X;store("showExtras",X?"1":"0");render($("search").value);toast(T("Extras")+": "+(X?T("On"):T("Off")));return}
+if(n==="Welcome guide"){$("wel").classList.add("open");return}
+if(n==="Check for updates"){toast(T("Checking for updates"));setTimeout(function(){location.reload()},500);return}
+if(n==="Send feedback"){location.href="https://github.com/kartproduction/kauncher/issues";return}
+if(n==="Privacy"){location.href="privacy.html";return}if(own[n]){location.href=own[n];return}if(n==="Camera"){$("cam").click();return}if(urls[n]){toast(T("Opening ")+n);location.href=urls[n]}}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-app]");if(b){go(b.dataset.app);if($("drawer").classList.contains("open")&&b.dataset.app!=="Extras")setTimeout(closeD,250)}});
 
 var SW=[["#16122A",1],["#000000",1],["#1F3A2E",1],["#F4EFE6",0],["#DDE7F0",0]];
 var DK={"--ink":"#EDEAF8","--mute":"#9189B0","--line":"#342D55","--surface":"#221C3D"};
@@ -227,18 +246,23 @@ $("pickph").onclick=function(){$("bgfile").click()};
 $("bgfile").onchange=function(){
   var f=this.files[0];if(!f)return;var img=new Image(),u=URL.createObjectURL(f);
   img.onload=function(){var s=Math.min(1,1400/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext("2d").drawImage(img,0,0,c.width,c.height);
-    if(store("bgphoto",c.toDataURL("image/jpeg",.8))){store("bgswatch","-1")}else{toast("Photo too large to save")}
+    if(store("bgphoto",c.toDataURL("image/jpeg",.8))){store("bgswatch","-1")}else{toast(T("Photo too large to save"))}
     URL.revokeObjectURL(u);applyBg();closeM()};
   img.src=u;this.value=""};
 function toFile(d){var p=d.split(","),bin=atob(p[1]),a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new File([a],"kauncher-wallpaper.jpg",{type:"image/jpeg"})}
 $("sharebg").onclick=function(){
-  var d=fetchS("bgphoto");if(!d){toast("Choose a photo first");return}
+  var d=fetchS("bgphoto");if(!d){toast(T("Choose a photo first"));return}
   var f=toFile(d);
-  if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f]}).catch(function(){})}else{toast("Saving isn’t supported here")}};
+  if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f]}).catch(function(){})}else{toast(T("Saving isn’t supported here"))}};
 var lp;
 $("screen").addEventListener("touchstart",function(e){if(e.target.closest("input,button")||$("screen").classList.contains("running"))return;lp=setTimeout(openM,600)},{passive:true});
 ["touchend","touchmove","touchcancel"].forEach(function(n){document.addEventListener(n,function(){clearTimeout(lp)},{passive:true})});
 applyBg();
+function trDom(){if(!NEP)return;document.documentElement.lang="ne";
+  document.querySelectorAll("[placeholder],[aria-label]").forEach(function(e){["placeholder","aria-label"].forEach(function(a){var v=e.getAttribute(a);if(v&&NE[v])e.setAttribute(a,NE[v])})});
+  var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n,list=[];while(n=w.nextNode())list.push(n);
+  list.forEach(function(n){var t=n.nodeValue.trim();if(t&&NE[t]&&n.parentNode.tagName!=="SCRIPT")n.nodeValue=n.nodeValue.replace(t,NE[t])})}
+trDom();
 </script>
 </body>
 </html>
