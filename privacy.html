@@ -78,7 +78,13 @@ a{color:inherit}
     <p class="note">Last updated: November 2026.</p>
   </section>
 
-  <footer>Designed by <a href="https://kartproduction.github.io/kart/">Kart Production</a>.<br>© 2026 Kart Production. All rights reserved.</footer>
+<footer>Designed by <a href="https://kartproduction.github.io/kart/">Kart Production</a>.<br>© <span class="yr" data-start="2026">2026</span> Kart Production. All rights reserved.</footer>
+<script>
+document.querySelectorAll(".yr").forEach(function(e){
+  var s=+e.dataset.start||2026, y=new Date().getFullYear();
+  e.textContent = y>s ? s+"–"+y : s;
+});
+</script>
 </main>
 </body>
 </html>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,7 +72,7 @@ a{color:inherit}
     <div id="skp" hidden style="display:flex;flex-direction:column;gap:12px"><canvas id="cv" aria-label="Sketch area"></canvas><div class="bar" id="pal"></div><div class="bar"><span class="sub">Brush</span><button class="w" data-i="0">Thin</button><button class="w" data-i="1">Medium</button><button class="w" data-i="2">Thick</button></div></div>
   </section>
 
-  <p class="foot"><a href="index.html">← Kauncher</a> · © 2026 Kart Production. All rights reserved.</p>
+<p class="foot"><a href="index.html">← Kauncher</a> · © <span class="yr" data-start="2026">2026</span> Kart Production. All rights reserved.</p>
 </main>
 <script>
 var $=function(i){return document.getElementById(i)};
@@ -141,6 +142,12 @@ window.onresize=function(){if(cur&&isSk(cur)&&!$("ed").hidden)sizeCv()};
 load();render();
 if(/from=app/.test(location.search)){var bk=document.querySelector(".foot a");if(bk){bk.href="app.html";bk.textContent="← Home"}}
 if(location.hash==="#sketch"){history.replaceState(null,"",location.pathname+location.search);$("newsk").click()}
+<script>
+document.querySelectorAll(".yr").forEach(function(e){
+  var s=+e.dataset.start||2026, y=new Date().getFullYear();
+  e.textContent = y>s ? s+"–"+y : s;
+});
+</script>
 </script>
 </body>
 </html>

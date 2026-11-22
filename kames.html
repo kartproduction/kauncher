@@ -38,7 +38,7 @@ a{color:inherit}
 <a class="tile" href="keshey.html"><b>Keshey</b><span>Bhutanese wrestling: hold the waist, keep your balance, throw your opponent</span></a>
 <a class="tile" href="ludo.html"><b>Ludo</b><span>2 to 4 players, with or without the computer</span><span class="sc" data-g="ludo"></span></a>
 <a class="tile" href="tictactoe.html"><b>Tic-Tac-Toe</b><span>Two players or against the computer</span><span class="sc" data-g="ttt"></span></a>
-<p class="foot"><a href="kames.html" id="back">← Kames</a> · © 2026 Kart Production. All rights reserved.</p>
+<p class="foot"><a href="kames.html" id="back">← Kames</a> · © <span class="yr" data-start="2026">2026</span> Kart Production. All rights reserved.</p>
 </main>
 <script>
 var $=function(i){return document.getElementById(i)};
@@ -48,6 +48,10 @@ var SK="kames.scores.v1",all={};try{all=JSON.parse(localStorage.getItem(SK))||{}
 document.querySelectorAll("[data-g]").forEach(function(e){var s=all[e.dataset.g];if(s&&s.w+s.l+s.d)e.textContent="Against the computer: won "+s.w+", lost "+s.l+", drew "+s.d});
 var cb=0;try{cb=+localStorage.getItem("kames.chungi.best.v1")||0}catch(e){}
 if(cb)$("chb").textContent="Best: "+cb+" kicks";
+document.querySelectorAll(".yr").forEach(function(e){
+  var s=+e.dataset.start||2026, y=new Date().getFullYear();
+  e.textContent = y>s ? s+"–"+y : s;
+});
 </script>
 </body>
 </html>

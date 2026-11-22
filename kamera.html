@@ -54,7 +54,7 @@ a{color:inherit}
 <section id="gal" hidden><div class="row"><button id="g2">← Camera</button></div><div id="grid"></div></section>
 <section id="viewer" hidden><div class="row"><button id="vb">← Back</button><button id="vd">Download</button><button id="vx">Delete</button></div><img id="big" alt="Photo"><video id="bigv" controls playsinline hidden></video></section>
 <p class="foot">Photos and videos live in this browser on this device and are not uploaded anywhere. If you clear your browser data they are lost, so use Download on the ones you want to keep. Zoom: pinch the picture, or use − and +.</p>
-<p class="foot"><a href="index.html">← Kauncher</a> · © 2026 Kart Production. All rights reserved.</p>
+<p class="foot"><a href="index.html">← Kauncher</a> · © <span class="yr" data-start="2026">2026</span> Kart Production. All rights reserved.</p>
 </main>
 <script>
 var $=function(i){return document.getElementById(i)};
@@ -116,6 +116,12 @@ window.addEventListener("pagehide",function(){stopRec();stopCam()});
 /* the storage name stays "kapture" so photos taken before the rename are still there */
 open("kapture").then(function(){return refresh()}).then(function(){ui();show("cam")},function(){msg("Storage is blocked in this browser, so photos can’t be saved.")});
 if(/from=app/.test(location.search)){var bk=document.querySelector(".foot a");if(bk){bk.href="app.html";bk.textContent="← Home"}}
+<script>
+document.querySelectorAll(".yr").forEach(function(e){
+  var s=+e.dataset.start||2026, y=new Date().getFullYear();
+  e.textContent = y>s ? s+"–"+y : s;
+});
+</script>
 </script>
 </body>
 </html>

@@ -143,7 +143,13 @@ a{color:inherit}
     <p class="sub" style="margin-top:10px">Notes for version 4.4 and older are on the <a href="https://github.com/kartproduction/kauncher/releases">releases page</a>.</p>
   </section>
 
-  <footer>Designed by <a href="https://kartproduction.github.io/kart/">Kart Production</a>.<br>© 2026 Kart Production. All rights reserved.</footer>
+<footer>Designed by <a href="https://kartproduction.github.io/kart/">Kart Production</a>.<br>© <span class="yr" data-start="2026">2026</span> Kart Production. All rights reserved.</footer>
+<script>
+document.querySelectorAll(".yr").forEach(function(e){
+  var s=+e.dataset.start||2026, y=new Date().getFullYear();
+  e.textContent = y>s ? s+"–"+y : s;
+});
+</script>
 </main>
 </body>
 </html>
