@@ -58,7 +58,7 @@ On Android these are built in. Photos, videos, recordings, notes and sketches ar
 - The Android app does **not** ask for internet permission.
 - It asks for the camera and microphone (for Kamera and Kord), permission to set the wallpaper, and permission to request app uninstalls (for long-press uninstall).
 - Usage access (optional) lets the weekly report, phone time cap and daily app limits work out how long you used your phone. Everything is worked out on your phone and nothing is uploaded.
-- Notifications are used for the Sunday weekly report. Starting at boot lets Kauncher book the next report again after a restart. Do Not Disturb access is only used if you turn on "Do not disturb during focus". The alarm permission is only used to start a timer in your phone's clock app.
+- Notifications are used for the Sunday weekly report and for the gentle nudge on the day you pass your phone time cap. Starting at boot lets Kauncher book the next report again after a restart. Do Not Disturb access is only used if you turn on "Do not disturb during focus". The alarm permission is only used to start a timer in your phone's clock app.
 - The edit lock, bedtime mode, focus hours, themes and birthdays add no permissions.
 - Your focus line, focus log, folders, notes, sketches, scores and settings are stored on your device.
 - Kauncher suggests [Mojeek](https://www.mojeek.com/support/smartphones/#ma), a search engine, once after install and in All apps until you install it. Tapping it opens Mojeek's setup page in your browser. Kauncher itself still makes no network connections.
